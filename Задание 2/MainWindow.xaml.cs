@@ -12,8 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Drawing;
+using System.Windows.Forms;
 
-namespace Задание_2
+namespace Task_2
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -29,13 +31,13 @@ namespace Задание_2
 
         private void DirectoryInput(object sender, TextChangedEventArgs e)
         {
-            TextBox textBox = (TextBox)sender;
+            System.Windows.Controls.TextBox textBox = (System.Windows.Controls.TextBox)sender;
             fileSeeker.Directory = textBox.Text;
         }
 
         private void FileMask(object sender, TextChangedEventArgs e)
         {
-            TextBox textBox = (TextBox)sender;
+            System.Windows.Controls.TextBox textBox = (System.Windows.Controls.TextBox)sender;
             fileSeeker.FileMask = textBox.Text;
         }
 
@@ -43,7 +45,14 @@ namespace Задание_2
         {
             TextBlock textBlock = new TextBlock();
             fileSeeker.FilesInDirectory();
-            MessageBox.Show(fileSeeker.Result);
+            System.Windows.MessageBox.Show(fileSeeker.Result);
+        }
+
+        private void OpenExplorer(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.ShowDialog();
+            fileSeeker.Directory = folderBrowserDialog.SelectedPath;
         }
     }
 }

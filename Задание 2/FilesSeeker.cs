@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 
-namespace Задание_2
+namespace Task_2
 {
     class FilesSeeker
     {
         private string directory;
         private string fileMask;
         private string result;
+        private List<string> allFiles= new List<string>();
 
         public string Directory { get => directory; set => directory = value; }
         public string FileMask { get => fileMask; set => fileMask = value; }
@@ -20,15 +21,12 @@ namespace Задание_2
 
         public void FilesInDirectory()
         {
-            string[] allFiles = null;
-            string filesDirectory = @"C:\" + Directory;
-            string matchFiles = "";
             try
             {
-                allFiles = System.IO.Directory.GetFiles(filesDirectory);
+                string[] allFiles = System.IO.Directory.GetFiles(Directory);
                 for(int  i = 0; i < allFiles.Length ;i++)
                 {
-                    allFiles[i] = allFiles[i].Remove(0, filesDirectory.Length);
+                   this.allFiles.Add(allFiles[i]);
                 }
             }
             catch(DirectoryNotFoundException)
@@ -40,12 +38,11 @@ namespace Задание_2
             {
                 foreach (string file in allFiles)
                 {
-                    if (file.Contains(fileMask))
+                    if (file.Contains(FileMask))
                     {
-                        matchFiles += file + "\n";
+                        Result += file + "\n";
                     }
                 }
-                result = matchFiles;
 
             }
             catch (NullReferenceException)
