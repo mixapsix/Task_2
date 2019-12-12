@@ -10,24 +10,16 @@ namespace Task_2
 {
     class FilesSeeker
     {
-        private string directory;
-        private string fileMask;
-        private string result;
-        private List<string> allFiles= new List<string>();
-
-        public string Directory { get => directory; set => directory = value; }
-        public string FileMask { get => fileMask; set => fileMask = value; }
-        public string Result { get => result; set => result = value; }
+        public string Directory { get; set; }
+        public string FileMask { get; set; }
+        public string Result { get ; set ; }
+        public List<string> AllFiles {  get ; set ; }
 
         public void FilesInDirectory()
         {
             try
             {
-                string[] allFiles = System.IO.Directory.GetFiles(Directory);
-                for(int  i = 0; i < allFiles.Length ;i++)
-                {
-                   this.allFiles.Add(allFiles[i]);
-                }
+                AllFiles = System.IO.Directory.GetFiles(Directory).ToList<string>(); ;
             }
             catch(DirectoryNotFoundException)
             {
@@ -36,7 +28,7 @@ namespace Task_2
 
             try
             {
-                foreach (string file in allFiles)
+                foreach (string file in AllFiles)
                 {
                     if (file.Contains(FileMask))
                     {
