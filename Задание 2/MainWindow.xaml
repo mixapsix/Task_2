@@ -6,10 +6,18 @@
         xmlns:local="clr-namespace:Task_2"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button Content="Find" HorizontalAlignment="Left" Margin="147,10,0,0" VerticalAlignment="Top" Width="75" Click="Click"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="FileMask"/>
-        <Button Content="Explorer" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" Click="OpenExplorer"/>
+    <Grid  ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Content="Поиск" HorizontalAlignment="Left" Margin="12,112,0,72" VerticalAlignment="Center" Width="75" Click="Click" Height="26"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="153,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="FileMask"/>
+        <Button Content="Explorer" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="120" Click="OpenExplorer"/>
+        <TextBlock x:Name="ResultBox" Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" HorizontalAlignment="Left" Margin="12,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="-1.731,-2.641"/>
+        <Label Content="Директория" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Маска файла" HorizontalAlignment="Left" Margin="153,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Результаты" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="-2.834,-0.705"/>
 
     </Grid>
 </Window>

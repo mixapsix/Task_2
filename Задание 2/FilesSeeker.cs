@@ -17,6 +17,7 @@ namespace Task_2
 
         public void FilesInDirectory()
         {
+            Result = null;
             try
             {
                 AllFiles = System.IO.Directory.GetFiles(Directory).ToList<string>(); ;
@@ -28,11 +29,13 @@ namespace Task_2
 
             try
             {
+                string temp;
                 foreach (string file in AllFiles)
                 {
-                    if (file.Contains(FileMask))
+                    temp = file.Remove(0, Directory.Length);
+                    if (temp.Contains(FileMask))
                     {
-                        Result += file + "\n";
+                        Result += temp + "\n";
                     }
                 }
 

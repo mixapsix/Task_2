@@ -43,9 +43,8 @@ namespace Task_2
 
         private void Click(object sender, RoutedEventArgs e)
         {
-            TextBlock textBlock = new TextBlock();
             fileSeeker.FilesInDirectory();
-            System.Windows.MessageBox.Show(fileSeeker.Result);
+            ResultBox.Text = fileSeeker.Result;
         }
 
         private void OpenExplorer(object sender, RoutedEventArgs e)
