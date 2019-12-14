@@ -52,6 +52,7 @@ namespace Task_2
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             folderBrowserDialog.ShowDialog();
             fileSeeker.Directory = folderBrowserDialog.SelectedPath;
+            directoryLabel.Content = "Директория для поиска: " + fileSeeker.Directory;
         }
     }
 }

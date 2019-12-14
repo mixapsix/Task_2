@@ -29,13 +29,11 @@ namespace Task_2
 
             try
             {
-                string temp;
                 foreach (string file in AllFiles)
                 {
-                    temp = file.Remove(0, Directory.Length);
-                    if (temp.Contains(FileMask))
+                    if (file.Remove(0, Directory.Length).Contains(FileMask))
                     {
-                        Result += temp + "\n";
+                        Result += file.Remove(0, Directory.Length) + "\n";
                     }
                 }
 
