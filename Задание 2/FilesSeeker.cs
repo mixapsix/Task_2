@@ -31,9 +31,26 @@ namespace Task_2
             {
                 foreach (string file in AllFiles)
                 {
+                    string matchString; //String that math the mask
                     if (file.Remove(0, Directory.Length).Contains(FileMask))
                     {
-                        Result += file.Remove(0, Directory.Length) + "\n";
+                        int line = 1; //Number of the line in the document
+                        bool fileName = false; //Print or not file name
+                        StreamReader streamReader = new StreamReader(file);
+                        while (!streamReader.EndOfStream)
+                        {
+
+                            if ((matchString = streamReader.ReadLine().ToString()).Contains(FileMask))
+                            {
+                                if (fileName != true)
+                                {
+                                    Result += file.Remove(0, Directory.Length + 1) + "\n"; // Print file name
+                                    fileName = true;                                  
+                                }
+                                Result += "["+ line + "]" + matchString + "\n"; //Number of the line
+                            }
+                            line++;
+                        }
                     }
                 }
 
