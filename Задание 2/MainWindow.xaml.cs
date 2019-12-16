@@ -17,9 +17,6 @@ using System.Windows.Forms;
 
 namespace Task_2
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         FilesSeeker fileSeeker = new FilesSeeker();
@@ -29,22 +26,11 @@ namespace Task_2
             InitializeComponent();
         }
 
-        private void DirectoryInput(object sender, TextChangedEventArgs e)
-        {
-            System.Windows.Controls.TextBox textBox = (System.Windows.Controls.TextBox)sender;
-            fileSeeker.Directory = textBox.Text;
-        }
-
-        private void FileMask(object sender, TextChangedEventArgs e)
-        {
-            System.Windows.Controls.TextBox textBox = (System.Windows.Controls.TextBox)sender;
-            fileSeeker.FileMask = textBox.Text;
-        }
-
         private void Click(object sender, RoutedEventArgs e)
         {
-            fileSeeker.FilesInDirectory();
-            ResultBox.Text = fileSeeker.Result;
+            fileSeeker.FileMask = stringMaskBox.Text;
+            fileSeeker.FileName = fileNameBox.Text;
+            ResultBox.Text = fileSeeker.FilesInDirectory();
         }
 
         private void OpenExplorer(object sender, RoutedEventArgs e)

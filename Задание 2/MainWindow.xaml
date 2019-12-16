@@ -17,12 +17,15 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="1" Grid.Row="0" Content="Поиск" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="auto" Click="Click" Height="25" FontFamily="Times New Roman"/>
-        <TextBox Grid.Column="0" Grid.Row="1"  HorizontalAlignment="Stretch" Height="25"  TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="FileMask" FontFamily="Times New Roman"/>
-        <Button Grid.Column="0" Grid.Row="0" Content="Обзор..." HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Click="OpenExplorer" FontFamily="Times New Roman"/>
+        
+        <Label Grid.Column="0" Grid.Row="0" Content="Имя файла" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Times New Roman"/>
+        <TextBox x:Name="fileNameBox" Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Stretch" Height="25"  TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman"/>
+        <Label Grid.Column="1" Grid.Row="0" Content="Маска строки"  HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
+        <TextBox x:Name="stringMaskBox" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Height="25"  TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Директория для поиска: " x:Name="directoryLabel" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
+        <Button Grid.Column="0" Grid.Row="1" Content="Обзор..." HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="25" Click="OpenExplorer" FontFamily="Times New Roman"/>
+        <Button Grid.Column="1" Grid.Row="1" Content="Поиск" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="auto" Click="Click" Height="25" FontFamily="Times New Roman"/>
         <TextBlock Grid.Column="0" Grid.Row="2" x:Name="ResultBox" Grid.ColumnSpan="2" Grid.RowSpan="1" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch" Text="Результаты" FontSize="14" FontFamily="Times New Roman"/>
-        <Label Grid.Column="0" Grid.Row="0" Content="Директория для поиска: " x:Name="directoryLabel" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
-        <Label Grid.Column="0" Grid.Row="1" Content="Маска файла" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Times New Roman"/>
 
     </Grid>
 </Window>

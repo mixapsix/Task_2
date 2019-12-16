@@ -10,29 +10,36 @@ namespace Task_2
 {
     class FilesSeeker
     {
+
         public string Directory { get; set; }
         public string FileMask { get; set; }
+        public string FileName { get; set; }
         public string Result { get ; set ; }
         public List<string> AllFiles {  get ; set ; }
 
-        public void FilesInDirectory()
+
+        public void GetAllFiles()
         {
-            Result = null;
             try
             {
                 AllFiles = System.IO.Directory.GetFiles(Directory).ToList<string>(); ;
             }
-            catch(DirectoryNotFoundException)
+            catch (DirectoryNotFoundException)
             {
                 MessageBox.Show("Директория не найдена!");
             }
+        }
 
+        public string FilesInDirectory()
+        {
+            GetAllFiles();
+            Result = null;
             try
             {
                 foreach (string file in AllFiles)
                 {
                     string matchString; //String that math the mask
-                    if (file.Remove(0, Directory.Length).Contains(FileMask))
+                    if (file.Remove(0, Directory.Length).Contains(FileName))
                     {
                         int line = 1; //Number of the line in the document
                         bool fileName = false; //Print or not file name
@@ -51,14 +58,15 @@ namespace Task_2
                             }
                             line++;
                         }
-                    }
+                    }   
                 }
-
+                return Result;
             }
             catch (NullReferenceException)
             {
                 MessageBox.Show("Files not found");
             }
+            return "";
         }
     }
 }
