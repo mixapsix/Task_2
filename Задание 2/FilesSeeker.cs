@@ -8,65 +8,86 @@ using System.IO;
 
 namespace Task_2
 {
-    class FilesSeeker
+    public static class FilesSeeker
     {
+        public static string FileMask { get; set; }
+        public static string FileName { get; set; }
 
-        public string Directory { get; set; }
-        public string FileMask { get; set; }
-        public string FileName { get; set; }
-        public string Result { get ; set ; }
-        public List<string> AllFiles {  get ; set ; }
-
-
-        public void GetAllFiles()
+        public static List<MatchData> GetAllFiles(string path)
         {
+            List<MatchData> matchDatas = new List<MatchData>();
+            List<string> allFiles = new List<string>();
             try
             {
-                AllFiles = System.IO.Directory.GetFiles(Directory).ToList<string>(); ;
+                OpenDirectory(path, ref allFiles);
+                foreach (string filePath in allFiles)
+                {
+                    matchDatas.Add(GetFileData(filePath, FileName, FileMask));
+                }
             }
             catch (DirectoryNotFoundException)
             {
                 MessageBox.Show("Директория не найдена!");
             }
+            return matchDatas;
         }
 
-        public string FilesInDirectory()
+        private static void OpenDirectory(string path, ref List<string> allFiles)
         {
-            GetAllFiles();
-            Result = null;
-            try
+            List<string> directories = System.IO.Directory.GetDirectories(path).ToList<string>();
+            if(directories!=null)
             {
-                foreach (string file in AllFiles)
+                foreach (string directory in directories)
                 {
-                    string matchString; //String that math the mask
-                    if (file.Remove(0, Directory.Length).Contains(FileName))
-                    {
-                        int line = 1; //Number of the line in the document
-                        bool fileName = false; //Print or not file name
-                        StreamReader streamReader = new StreamReader(file);
-                        while (!streamReader.EndOfStream)
-                        {
-
-                            if ((matchString = streamReader.ReadLine().ToString()).Contains(FileMask))
-                            {
-                                if (fileName != true)
-                                {
-                                    Result += file.Remove(0, Directory.Length + 1) + "\n"; // Print file name
-                                    fileName = true;                                  
-                                }
-                                Result += "["+ line + "]" + matchString + "\n"; //Number of the line
-                            }
-                            line++;
-                        }
-                    }   
+                    OpenDirectory(directory, ref allFiles);
                 }
-                return Result;
             }
-            catch (NullReferenceException)
+            List<string> files = System.IO.Directory.GetFiles(path).ToList<string>();
+            foreach(string file in files)
             {
-                MessageBox.Show("Files not found");
+                allFiles.Add(file);
             }
-            return "";
         }
+
+        public static List<MatchData> GetFileData(string path, string fileName, string fileMask)
+        {
+        //    try
+        //    {
+        //        List<MatchData> matchDatas = new List<MatchData>();
+        //        if (path.Remove(0, path.Length).Contains(fileName))
+        //        {
+        //            int line = 1; //Number of the line in the document
+        //            bool name = false; //Print or not file name
+        //            string matchString = null; 
+        //            StreamReader streamReader = new StreamReader(path);
+        //            while (!streamReader.EndOfStream)
+        //            {
+        //                if ((matchString = streamReader.ReadLine().ToString()).Contains(FileMask))
+        //                {
+        //                    if (name != true)
+        //                    {
+        //                        matchData.FileName += path.Remove(0, path.Length + 1) + "\n"; // Print file name
+        //                        name = true;
+        //                    }
+        //                    matchData += "[" + line + "]" + matchString + "\n"; //Number of the line
+        //                }
+        //                line++;
+        //            }
+        //        }
+
+        //        return Result;
+        //    }
+        //    catch (NullReferenceException)
+        //    {
+        //        MessageBox.Show("Files not found");
+        //    }
+        }
+    }
+
+    public class MatchData
+    {
+        public string FileName { get; set; }
+        public int LineNumber { get; set; }
+        public string Line { get; set; }
     }
 }

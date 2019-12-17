@@ -19,8 +19,7 @@ namespace Task_2
 {
     public partial class MainWindow : Window
     {
-        FilesSeeker fileSeeker = new FilesSeeker();
-
+        private string path;
         public MainWindow()
         {
             InitializeComponent();
@@ -28,17 +27,18 @@ namespace Task_2
 
         private void Click(object sender, RoutedEventArgs e)
         {
-            fileSeeker.FileMask = stringMaskBox.Text;
-            fileSeeker.FileName = fileNameBox.Text;
-            ResultBox.Text = fileSeeker.FilesInDirectory();
+            FilesSeeker.FileMask = stringMaskBox.Text;
+            FilesSeeker.FileName = fileNameBox.Text;
+            FilesSeeker.GetAllFiles(path);
+            //ResultBox.Text = FilesSeeker.FilesInDirectory()
         }
 
         private void OpenExplorer(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             folderBrowserDialog.ShowDialog();
-            fileSeeker.Directory = folderBrowserDialog.SelectedPath;
-            directoryLabel.Content = "Директория для поиска: " + fileSeeker.Directory;
+            path = folderBrowserDialog.SelectedPath;
+            directoryLabel.Content = "Директория для поиска: " + folderBrowserDialog.SelectedPath;
         }
     }
 }
