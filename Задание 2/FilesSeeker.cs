@@ -10,24 +10,21 @@ namespace Task_2
 {
     public static class FilesSeeker
     {
-        public static string FileMask { get; set; }
-        public static string FileName { get; set; }
-
-        public static List<MatchData> GetAllFiles(string path)
+        public static List<MatchData> GetAllFiles(string path, string fileName, string fileMask)
         {
             List<MatchData> matchDatas = new List<MatchData>();
             List<string> allFiles = new List<string>();
             try
-            {
+            {               
                 OpenDirectory(path, ref allFiles);
                 foreach (string filePath in allFiles)
                 {
-                    matchDatas.Add(GetFileData(filePath, FileName, FileMask));
+                    matchDatas.AddRange(GetFileData(filePath, fileName, fileMask));
                 }
             }
-            catch (DirectoryNotFoundException)
+            catch(ArgumentNullException)
             {
-                MessageBox.Show("Директория не найдена!");
+                MessageBox.Show("Выберите директорию");
             }
             return matchDatas;
         }
@@ -42,45 +39,27 @@ namespace Task_2
                     OpenDirectory(directory, ref allFiles);
                 }
             }
-            List<string> files = System.IO.Directory.GetFiles(path).ToList<string>();
-            foreach(string file in files)
-            {
-                allFiles.Add(file);
-            }
+            allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
         }
 
         public static List<MatchData> GetFileData(string path, string fileName, string fileMask)
         {
-        //    try
-        //    {
-        //        List<MatchData> matchDatas = new List<MatchData>();
-        //        if (path.Remove(0, path.Length).Contains(fileName))
-        //        {
-        //            int line = 1; //Number of the line in the document
-        //            bool name = false; //Print or not file name
-        //            string matchString = null; 
-        //            StreamReader streamReader = new StreamReader(path);
-        //            while (!streamReader.EndOfStream)
-        //            {
-        //                if ((matchString = streamReader.ReadLine().ToString()).Contains(FileMask))
-        //                {
-        //                    if (name != true)
-        //                    {
-        //                        matchData.FileName += path.Remove(0, path.Length + 1) + "\n"; // Print file name
-        //                        name = true;
-        //                    }
-        //                    matchData += "[" + line + "]" + matchString + "\n"; //Number of the line
-        //                }
-        //                line++;
-        //            }
-        //        }
-
-        //        return Result;
-        //    }
-        //    catch (NullReferenceException)
-        //    {
-        //        MessageBox.Show("Files not found");
-        //    }
+            List<MatchData> matchDatas = new List<MatchData>();
+            if (path.Remove(0, path.LastIndexOf('\\')).Contains(fileName))
+            {
+                int line = 1; //Number of the line in the document
+                string matchString = null;
+                StreamReader streamReader = new StreamReader(path);
+                while (!streamReader.EndOfStream)
+                {
+                    if ((matchString = streamReader.ReadLine().ToString()).Contains(fileMask))
+                    {
+                        matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });                           
+                    }
+                    line++;
+                }
+            }
+        return matchDatas;
         }
     }
 

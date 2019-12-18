@@ -27,10 +27,23 @@ namespace Task_2
 
         private void Click(object sender, RoutedEventArgs e)
         {
-            FilesSeeker.FileMask = stringMaskBox.Text;
-            FilesSeeker.FileName = fileNameBox.Text;
-            FilesSeeker.GetAllFiles(path);
-            //ResultBox.Text = FilesSeeker.FilesInDirectory()
+            if (fileNameBox.Text == "")
+            {
+                System.Windows.MessageBox.Show("Введите имя файла");
+            }
+            else if (stringMaskBox.Text == "")
+            {
+                System.Windows.MessageBox.Show("Введите маску строки");
+            }
+            else
+            {
+                var allMatch = FilesSeeker.GetAllFiles(path, fileNameBox.Text, stringMaskBox.Text);
+                ResultBox.Text = null;
+                foreach (MatchData match in allMatch)
+                {
+                    ResultBox.Text += match.FileName + "\n" + match.LineNumber + " " + match.Line + "\n";
+                }
+            }
         }
 
         private void OpenExplorer(object sender, RoutedEventArgs e)
