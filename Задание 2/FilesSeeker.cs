@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Task_2
 {
@@ -13,18 +14,16 @@ namespace Task_2
         public static List<MatchData> GetAllFiles(string path, string fileName, string fileMask)
         {
             List<MatchData> matchDatas = new List<MatchData>();
-            List<string> allFiles = new List<string>();
-            try
-            {               
-                OpenDirectory(path, ref allFiles);
-                foreach (string filePath in allFiles)
-                {
-                    matchDatas.AddRange(GetFileData(filePath, fileName, fileMask));
-                }
-            }
-            catch(ArgumentNullException)
+            List<string> allFilePaths = new List<string>();
+            List<string> nameMachedFiles = new List<string>();
+            OpenDirectory(path, ref allFilePaths);
+            foreach (string allFilePath in allFilePaths)
             {
-                MessageBox.Show("Выберите директорию");
+                nameMachedFiles.AddRange(GetMatchedFiles(allFilePath, fileName));                   
+            }
+            foreach(string nameMatchedFile in nameMachedFiles)
+            {
+                matchDatas.AddRange(GetMatchedData(nameMatchedFile, fileMask));
             }
             return matchDatas;
         }
@@ -42,24 +41,33 @@ namespace Task_2
             allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
         }
 
-        public static List<MatchData> GetFileData(string path, string fileName, string fileMask)
+        public static List<string> GetMatchedFiles(string path, string fileName)
+        {
+            List<string> matchedFiles = new List<string>();
+            Regex fileMask = new Regex($"\\w*{fileName}\\w*");
+            if(fileMask.IsMatch(path.Remove(0, path.LastIndexOf('\\'))))
+            {
+                matchedFiles.Add(path);
+            }
+            return matchedFiles;
+
+        }
+        public static List<MatchData> GetMatchedData(string path, string fileMask)
         {
             List<MatchData> matchDatas = new List<MatchData>();
-            if (path.Remove(0, path.LastIndexOf('\\')).Contains(fileName))
+            Regex mask = new Regex($"\\w*{fileMask}\\w*");
+            int line = 1; //Number of the line in the document
+            string matchString = null;
+            StreamReader streamReader = new StreamReader(path);
+            while (!streamReader.EndOfStream)
             {
-                int line = 1; //Number of the line in the document
-                string matchString = null;
-                StreamReader streamReader = new StreamReader(path);
-                while (!streamReader.EndOfStream)
+                if (mask.IsMatch(matchString = streamReader.ReadLine().ToString()))
                 {
-                    if ((matchString = streamReader.ReadLine().ToString()).Contains(fileMask))
-                    {
-                        matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });                           
-                    }
-                    line++;
+                    matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });                           
                 }
+                line++;
             }
-        return matchDatas;
+            return matchDatas;
         }
     }
 

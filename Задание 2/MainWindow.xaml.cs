@@ -35,14 +35,13 @@ namespace Task_2
             {
                 System.Windows.MessageBox.Show("Введите маску строки");
             }
+            else if(path == null || path == "")
+            {
+                System.Windows.MessageBox.Show("Выберите директорию");
+            }
             else
             {
-                var allMatch = FilesSeeker.GetAllFiles(path, fileNameBox.Text, stringMaskBox.Text);
-                ResultBox.Text = null;
-                foreach (MatchData match in allMatch)
-                {
-                    ResultBox.Text += match.FileName + "\n" + match.LineNumber + " " + match.Line + "\n";
-                }
+                resultGrid.ItemsSource = FilesSeeker.GetAllFiles(path, fileNameBox.Text, stringMaskBox.Text);
             }
         }
 
@@ -52,6 +51,11 @@ namespace Task_2
             folderBrowserDialog.ShowDialog();
             path = folderBrowserDialog.SelectedPath;
             directoryLabel.Content = "Директория для поиска: " + folderBrowserDialog.SelectedPath;
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
