@@ -9,21 +9,39 @@ using System.Text.RegularExpressions;
 
 namespace Task_2
 {
+    /// <summary>
+    /// Класс для поиска определенных строк в файлах расположенных по выбранной директории, с поиском в поддпапках
+    /// </summary>
     public static class FilesSeeker
     {
-        public static List<MatchData> GetAllFiles(string path, string fileName, string fileMask)
+        delegate List<string> fileTask(string x,string y);
+        delegate List<MatchData> stringTask(string x, string y);
+
+        /// <summary>
+        /// Метод осуществляет поиск по директории path и поддиректориям, файлов содержащих маску fileNameMask. В данных файлах происходит поиск номеров строк по маске lineMask.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="fileNameMask"></param>
+        /// <param name="lineMask"></param>
+        /// <returns></returns>
+        public static List<MatchData> GetAllFiles(string directory, string fileNameMask, string lineMask)
         {
             List<MatchData> matchDatas = new List<MatchData>();
             List<string> allFilePaths = new List<string>();
             List<string> nameMachedFiles = new List<string>();
-            OpenDirectory(path, ref allFilePaths);
+            Queue<Task> foundFileQueue = new Queue<Task>();
+            Queue<Task> foundStringQueue = new Queue<Task>();
+
+            OpenDirectory(directory, ref allFilePaths);
+
             foreach (string allFilePath in allFilePaths)
             {
-                nameMachedFiles.AddRange(GetMatchedFiles(allFilePath, fileName));                   
+                
+                nameMachedFiles.AddRange(GetMatchedFiles(allFilePath, fileNameMask));                   
             }
             foreach(string nameMatchedFile in nameMachedFiles)
             {
-                matchDatas.AddRange(GetMatchedData(nameMatchedFile, fileMask));
+                matchDatas.AddRange(GetMatchedData(nameMatchedFile, lineMask));
             }
             return matchDatas;
         }
@@ -41,10 +59,10 @@ namespace Task_2
             allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
         }
 
-        public static List<string> GetMatchedFiles(string path, string fileName)
+        private static List<string> GetMatchedFiles(string path, string fileNameMask)
         {
             List<string> matchedFiles = new List<string>();
-            Regex fileMask = new Regex($"\\w*{fileName}\\w*");
+            Regex fileMask = new Regex($"\\w*{fileNameMask}\\w*");
             if(fileMask.IsMatch(path.Remove(0, path.LastIndexOf('\\'))))
             {
                 matchedFiles.Add(path);
@@ -52,10 +70,11 @@ namespace Task_2
             return matchedFiles;
 
         }
-        public static List<MatchData> GetMatchedData(string path, string fileMask)
+
+        private static List<MatchData> GetMatchedData(string path, string lineMask)
         {
             List<MatchData> matchDatas = new List<MatchData>();
-            Regex mask = new Regex($"\\w*{fileMask}\\w*");
+            Regex mask = new Regex($"\\w*{lineMask}\\w*");
             int line = 1; //Number of the line in the document
             string matchString = null;
             StreamReader streamReader = new StreamReader(path);
@@ -69,12 +88,5 @@ namespace Task_2
             }
             return matchDatas;
         }
-    }
-
-    public class MatchData
-    {
-        public string FileName { get; set; }
-        public int LineNumber { get; set; }
-        public string Line { get; set; }
     }
 }
