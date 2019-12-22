@@ -12,60 +12,86 @@ namespace Task_2
     /// <summary>
     /// Класс для поиска определенных строк в файлах расположенных по выбранной директории, с поиском в поддпапках
     /// </summary>
+    /// 
     public static class FilesSeeker
     {
-        delegate List<string> fileTask(string x,string y);
-        delegate List<MatchData> stringTask(string x, string y);
-
         /// <summary>
-        /// Метод осуществляет поиск по директории path и поддиректориям, файлов содержащих маску fileNameMask. В данных файлах происходит поиск номеров строк по маске lineMask.
+        /// Метод осуществяющий поиск по указнному режиму в параметре regime. Возможен поиск маски строки по всем файлам, по совпадающим маске файла и просто по маске файла.
         /// </summary>
         /// <param name="directory"></param>
         /// <param name="fileNameMask"></param>
         /// <param name="lineMask"></param>
+        /// <param name="regime"></param>
         /// <returns></returns>
-        public static List<MatchData> GetAllFiles(string directory, string fileNameMask, string lineMask)
+        public static List<MatchData> SearchWithRegime(string directory, string fileNameMask, string lineMask, regime regime)
         {
             List<MatchData> matchDatas = new List<MatchData>();
+
             List<string> allFilePaths = new List<string>();
-            List<string> nameMachedFiles = new List<string>();
-            Queue<Task> foundFileQueue = new Queue<Task>();
-            Queue<Task> foundStringQueue = new Queue<Task>();
 
-            OpenDirectory(directory, ref allFilePaths);
+            GetAllFiles(directory, ref allFilePaths);
 
-            foreach (string allFilePath in allFilePaths)
+            switch (regime)
             {
-                
-                nameMachedFiles.AddRange(GetMatchedFiles(allFilePath, fileNameMask));                   
-            }
-            foreach(string nameMatchedFile in nameMachedFiles)
-            {
-                matchDatas.AddRange(GetMatchedData(nameMatchedFile, lineMask));
+                case regime.AllFileSearch:
+                    {
+                        foreach (string allFilePath in allFilePaths)
+                        {
+                            matchDatas.AddRange(GetMatchedData(allFilePath, lineMask));
+                        }
+
+                        break;
+                    }
+                case regime.FileMaskSearch:
+                    {
+                        foreach (string allFilePath in allFilePaths)
+                        {
+                            matchDatas.AddRange(GetMatchedFiles(allFilePath, fileNameMask));
+                        }
+
+                        break;
+                    }
+                case regime.MatchFileSearch:
+                    {
+                        List<MatchData> temp = new List<MatchData>();
+                        foreach (string allFilePath in allFilePaths)
+                        {
+
+                            temp.AddRange(GetMatchedFiles(allFilePath, fileNameMask));
+                        }
+
+                        foreach (MatchData data in temp)
+                        {
+                            matchDatas.AddRange(GetMatchedData(data.FileName, lineMask));
+                        }
+
+                        break;
+                    }
             }
             return matchDatas;
         }
 
-        private static void OpenDirectory(string path, ref List<string> allFiles)
+        private static void GetAllFiles(string path, ref List<string> allFiles)
         {
             List<string> directories = System.IO.Directory.GetDirectories(path).ToList<string>();
-            if(directories!=null)
+
+            if (directories != null)
             {
                 foreach (string directory in directories)
                 {
-                    OpenDirectory(directory, ref allFiles);
+                    GetAllFiles(directory, ref allFiles);
                 }
             }
             allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
-        }
 
-        private static List<string> GetMatchedFiles(string path, string fileNameMask)
+        }
+        private static List<MatchData> GetMatchedFiles(string path, string fileNameMask)
         {
-            List<string> matchedFiles = new List<string>();
+            List<MatchData> matchedFiles = new List<MatchData>();
             Regex fileMask = new Regex($"\\w*{fileNameMask}\\w*");
             if(fileMask.IsMatch(path.Remove(0, path.LastIndexOf('\\'))))
             {
-                matchedFiles.Add(path);
+                matchedFiles.Add(new MatchData() { FileName = path });
             }
             return matchedFiles;
 

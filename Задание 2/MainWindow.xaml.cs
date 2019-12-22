@@ -23,6 +23,7 @@ namespace Task_2
         public MainWindow()
         {
             InitializeComponent();
+            regimeBox.ItemsSource = Enum.GetValues(typeof(regime));
         }
 
         private void Click(object sender, RoutedEventArgs e)
@@ -41,7 +42,7 @@ namespace Task_2
             }
             else
             {
-                resultGrid.ItemsSource = FilesSeeker.GetAllFiles(path, fileNameBox.Text, stringMaskBox.Text);
+                resultGrid.ItemsSource = FilesSeeker.SearchWithRegime(path, fileNameBox.Text, stringMaskBox.Text, (regime)regimeBox.SelectionBoxItem);
             }
         }
 
@@ -52,10 +53,13 @@ namespace Task_2
             path = folderBrowserDialog.SelectedPath;
             directoryLabel.Content = "Директория для поиска: " + folderBrowserDialog.SelectedPath;
         }
+    }
 
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+    public enum regime
+    {
+        FileMaskSearch,
+        
+        MatchFileSearch,
+        AllFileSearch
     }
 }
