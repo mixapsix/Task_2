@@ -57,8 +57,7 @@ namespace Task_2
 
     public enum regime
     {
-        FileMaskSearch,
-        
+        FileMaskSearch,      
         MatchFileSearch,
         AllFileSearch
     }

@@ -29,6 +29,8 @@ namespace Task_2
 
             List<string> allFilePaths = new List<string>();
 
+            List<Task> taskList = new List<Task>();
+
             GetAllFiles(directory, ref allFilePaths);
 
             switch (regime)
@@ -37,8 +39,19 @@ namespace Task_2
                     {
                         foreach (string allFilePath in allFilePaths)
                         {
-                            matchDatas.AddRange(GetMatchedData(allFilePath, lineMask));
+                            taskList.Add(new Task(() => 
+                            {
+                                GetMatchedData(allFilePath, lineMask, ref matchDatas);
+                            }));
                         }
+
+                        foreach(Task task in taskList)
+                        {
+                            task.Start();
+                        }
+
+                        Task.WaitAll(taskList.ToArray());
+                        taskList.Clear();
 
                         break;
                     }
@@ -46,8 +59,20 @@ namespace Task_2
                     {
                         foreach (string allFilePath in allFilePaths)
                         {
-                            matchDatas.AddRange(GetMatchedFiles(allFilePath, fileNameMask));
+                            taskList.Add(new Task(() =>
+                            {
+                                GetMatchedFiles(allFilePath, fileNameMask, ref matchDatas);
+                            }));
+
                         }
+
+                        foreach (Task task in taskList)
+                        {
+                            task.Start();
+                        }
+
+                        Task.WaitAll(taskList.ToArray());
+                        taskList.Clear();
 
                         break;
                     }
@@ -56,14 +81,35 @@ namespace Task_2
                         List<MatchData> temp = new List<MatchData>();
                         foreach (string allFilePath in allFilePaths)
                         {
-
-                            temp.AddRange(GetMatchedFiles(allFilePath, fileNameMask));
+                            taskList.Add(new Task(() =>
+                            {
+                                GetMatchedFiles(allFilePath, fileNameMask, ref temp);
+                            }));
                         }
+
+                        foreach (Task task in taskList)
+                        {
+                            task.Start();
+                        }
+
+                        Task.WaitAll(taskList.ToArray());
+                        taskList.Clear();
 
                         foreach (MatchData data in temp)
                         {
-                            matchDatas.AddRange(GetMatchedData(data.FileName, lineMask));
+                            taskList.Add(new Task(() =>
+                            {
+                                GetMatchedData(data.FileName, lineMask, ref matchDatas);
+                            }));
                         }
+
+                        foreach (Task task in taskList)
+                        {
+                            task.Start();
+                        }
+
+                        Task.WaitAll(taskList.ToArray());
+                        taskList.Clear();
 
                         break;
                     }
@@ -85,21 +131,19 @@ namespace Task_2
             allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
 
         }
-        private static List<MatchData> GetMatchedFiles(string path, string fileNameMask)
+        private static void GetMatchedFiles(string path, string fileNameMask, ref List<MatchData> matchDatas)
         {
             List<MatchData> matchedFiles = new List<MatchData>();
             Regex fileMask = new Regex($"\\w*{fileNameMask}\\w*");
             if(fileMask.IsMatch(path.Remove(0, path.LastIndexOf('\\'))))
             {
-                matchedFiles.Add(new MatchData() { FileName = path });
+                matchDatas.Add(new MatchData() { FileName = path });
             }
-            return matchedFiles;
 
         }
 
-        private static List<MatchData> GetMatchedData(string path, string lineMask)
+        private static void GetMatchedData(string path, string lineMask, ref List<MatchData> matchDatas)
         {
-            List<MatchData> matchDatas = new List<MatchData>();
             Regex mask = new Regex($"\\w*{lineMask}\\w*");
             int line = 1; //Number of the line in the document
             string matchString = null;
@@ -112,7 +156,6 @@ namespace Task_2
                 }
                 line++;
             }
-            return matchDatas;
         }
     }
 }
