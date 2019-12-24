@@ -23,7 +23,8 @@ namespace Task_2
         /// <param name="lineMask"></param>
         /// <param name="regime"></param>
         /// <returns></returns>
-        public static List<MatchData> SearchWithRegime(string directory, string fileNameMask, string lineMask, regime regime)
+        /// 
+        public static List<MatchData> SearchWithRegime(int regime, string directory, string fileNameMask = "", string lineMask = "")
         {
             List<MatchData> matchDatas = new List<MatchData>();
 
@@ -35,82 +36,85 @@ namespace Task_2
 
             switch (regime)
             {
-                case regime.AllFileSearch:
+                case 0:
                     {
-                        foreach (string allFilePath in allFilePaths)
+                        if (fileNameMask == "")
                         {
-                            taskList.Add(new Task(() => 
-                            {
-                                GetMatchedData(allFilePath, lineMask, ref matchDatas);
-                            }));
+                            System.Windows.MessageBox.Show("Введите имя файла");
                         }
-
-                        foreach(Task task in taskList)
+                        else
                         {
-                            task.Start();
-                        }
-
-                        Task.WaitAll(taskList.ToArray());
-                        taskList.Clear();
-
-                        break;
-                    }
-                case regime.FileMaskSearch:
-                    {
-                        foreach (string allFilePath in allFilePaths)
-                        {
-                            taskList.Add(new Task(() =>
+                            foreach (string allFilePath in allFilePaths)
                             {
                                 GetMatchedFiles(allFilePath, fileNameMask, ref matchDatas);
-                            }));
-
+                            }
                         }
-
-                        foreach (Task task in taskList)
-                        {
-                            task.Start();
-                        }
-
-                        Task.WaitAll(taskList.ToArray());
-                        taskList.Clear();
-
                         break;
                     }
-                case regime.MatchFileSearch:
+                case 1:
                     {
-                        List<MatchData> temp = new List<MatchData>();
-                        foreach (string allFilePath in allFilePaths)
+                        if(fileNameMask == "" && lineMask == "")
                         {
-                            taskList.Add(new Task(() =>
+                            System.Windows.MessageBox.Show("Введите имя файла и маску строки");
+                        }
+                        else if (fileNameMask == "")
+                        {
+                            System.Windows.MessageBox.Show("Введите имя файла");
+                        }
+                        else if (lineMask == "")
+                        {
+                            System.Windows.MessageBox.Show("Введите маску строки");
+                        }
+                        else
+                        {
+                            List<MatchData> temp = new List<MatchData>();
+                            foreach (string allFilePath in allFilePaths)
                             {
                                 GetMatchedFiles(allFilePath, fileNameMask, ref temp);
-                            }));
-                        }
+                            }
 
-                        foreach (Task task in taskList)
-                        {
-                            task.Start();
-                        }
-
-                        Task.WaitAll(taskList.ToArray());
-                        taskList.Clear();
-
-                        foreach (MatchData data in temp)
-                        {
-                            taskList.Add(new Task(() =>
+                            foreach (MatchData data in temp)
                             {
-                                GetMatchedData(data.FileName, lineMask, ref matchDatas);
-                            }));
-                        }
+                                taskList.Add(new Task(() =>
+                                {
+                                    GetMatchedData(data.FileName, lineMask, ref matchDatas);
+                                }));
+                            }
 
-                        foreach (Task task in taskList)
+                            foreach (Task task in taskList)
+                            {
+                                task.Start();
+                            }
+
+                            Task.WaitAll(taskList.ToArray());
+                            taskList.Clear();
+                        }
+                        break;
+                    }
+                case 2:
+                    {
+                        if (lineMask == "")
                         {
-                            task.Start();
+                            System.Windows.MessageBox.Show("Введите маску строки");
                         }
+                        else
+                        {
+                            foreach (string allFilePath in allFilePaths)
+                            {
+                                taskList.Add(new Task(() =>
+                                {
+                                    GetMatchedData(allFilePath, lineMask, ref matchDatas);
+                                }));
+                            }
 
-                        Task.WaitAll(taskList.ToArray());
-                        taskList.Clear();
+                            foreach (Task task in taskList)
+                            {
+                                task.Start();
+                            }
 
+                            Task.WaitAll(taskList.ToArray());
+                            taskList.Clear();
+                        }
                         break;
                     }
             }
@@ -119,17 +123,23 @@ namespace Task_2
 
         private static void GetAllFiles(string path, ref List<string> allFiles)
         {
-            List<string> directories = System.IO.Directory.GetDirectories(path).ToList<string>();
-
-            if (directories != null)
+            try
             {
-                foreach (string directory in directories)
-                {
-                    GetAllFiles(directory, ref allFiles);
-                }
-            }
-            allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
+                List<string> directories = System.IO.Directory.GetDirectories(path).ToList<string>();
 
+                if (directories != null)
+                {
+                    foreach (string directory in directories)
+                    {
+                        GetAllFiles(directory, ref allFiles);
+                    }
+                }
+                allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
+            }
+            catch(UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
         private static void GetMatchedFiles(string path, string fileNameMask, ref List<MatchData> matchDatas)
         {
@@ -144,17 +154,24 @@ namespace Task_2
 
         private static void GetMatchedData(string path, string lineMask, ref List<MatchData> matchDatas)
         {
-            Regex mask = new Regex($"\\w*{lineMask}\\w*");
-            int line = 1; //Number of the line in the document
-            string matchString = null;
-            StreamReader streamReader = new StreamReader(path);
-            while (!streamReader.EndOfStream)
+            try
             {
-                if (mask.IsMatch(matchString = streamReader.ReadLine().ToString()))
+                Regex mask = new Regex($"\\w*{lineMask}\\w*");
+                int line = 1;
+                string matchString = null;
+                StreamReader streamReader = new StreamReader(path);
+                while (!streamReader.EndOfStream)
                 {
-                    matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });                           
+                    if (mask.IsMatch(matchString = streamReader.ReadLine().ToString()))
+                    {
+                        matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });
+                    }
+                    line++;
                 }
-                line++;
+            }
+            catch(IOException e)
+            {
+                MessageBox.Show(e.Message);
             }
         }
     }

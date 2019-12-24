@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace Task_2
 {
@@ -23,26 +24,18 @@ namespace Task_2
         public MainWindow()
         {
             InitializeComponent();
-            regimeBox.ItemsSource = Enum.GetValues(typeof(regime));
+            regimeBox.ItemsSource = RegimeTranformer.regime.Values.ToList();
         }
 
         private void Click(object sender, RoutedEventArgs e)
         {
-            if (fileNameBox.Text == "")
-            {
-                System.Windows.MessageBox.Show("Введите имя файла");
-            }
-            else if (stringMaskBox.Text == "")
-            {
-                System.Windows.MessageBox.Show("Введите маску строки");
-            }
-            else if(path == null || path == "")
+            if(path == null || path == "")
             {
                 System.Windows.MessageBox.Show("Выберите директорию");
             }
             else
-            {
-                resultGrid.ItemsSource = FilesSeeker.SearchWithRegime(path, fileNameBox.Text, stringMaskBox.Text, (regime)regimeBox.SelectionBoxItem);
+            {              
+                resultGrid.ItemsSource = FilesSeeker.SearchWithRegime(RegimeTranformer.TransformToInt((string)regimeBox.SelectionBoxItem), path, fileNameBox.Text, stringMaskBox.Text);
             }
         }
 
@@ -53,12 +46,5 @@ namespace Task_2
             path = folderBrowserDialog.SelectedPath;
             directoryLabel.Content = "Директория для поиска: " + folderBrowserDialog.SelectedPath;
         }
-    }
-
-    public enum regime
-    {
-        FileMaskSearch,      
-        MatchFileSearch,
-        AllFileSearch
     }
 }
