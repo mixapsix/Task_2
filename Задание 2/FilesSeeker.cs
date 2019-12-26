@@ -41,7 +41,7 @@ namespace Task_2
                     {
                         if (fileNameMask == "")
                         {
-                            System.Windows.MessageBox.Show("Введите имя файла");
+                           MessageBox.Show("Введите имя файла");
                         }
                         else
                         {
@@ -56,15 +56,15 @@ namespace Task_2
                     {
                         if(fileNameMask == "" && lineMask == "")
                         {
-                            System.Windows.MessageBox.Show("Введите имя файла и маску строки");
+                            MessageBox.Show("Введите имя файла и маску строки");
                         }
                         else if (fileNameMask == "")
                         {
-                            System.Windows.MessageBox.Show("Введите имя файла");
+                            MessageBox.Show("Введите имя файла");
                         }
                         else if (lineMask == "")
                         {
-                            System.Windows.MessageBox.Show("Введите маску строки");
+                            MessageBox.Show("Введите маску строки");
                         }
                         else
                         {
@@ -93,7 +93,7 @@ namespace Task_2
                     {
                         if (lineMask == "")
                         {
-                            System.Windows.MessageBox.Show("Введите маску строки");
+                            MessageBox.Show("Введите маску строки");
                         }
                         else
                         {
@@ -131,9 +131,9 @@ namespace Task_2
                 }
                 allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
             }
-            catch(UnauthorizedAccessException e)
+            catch(UnauthorizedAccessException)
             {
-                MessageBox.Show(e.Message);
+                throw;
             }
         }
         private static void GetMatchedFiles(string path, string fileNameMask, ref List<MatchData> matchDatas)
@@ -164,9 +164,9 @@ namespace Task_2
                     line++;
                 }
             }
-            catch(IOException e)
+            catch(IOException)
             {
-                MessageBox.Show(e.Message);
+                throw;
             }
         }
     }

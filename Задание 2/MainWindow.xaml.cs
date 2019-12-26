@@ -13,14 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Drawing;
-using System.Windows.Forms;
+using Forms = System.Windows.Forms;
 using System.ComponentModel;
 
 namespace Task_2
 {
     public partial class MainWindow : Window
     {
+
         private string path;
+        List<MatchData> matchData;
 
         private Dictionary<string, int> regime = new Dictionary<string, int>()
         {
@@ -34,27 +36,49 @@ namespace Task_2
             InitializeComponent();
             regimeBox.ItemsSource = regime.Keys.ToList();
         }
-
+       
         private void Click(object sender, RoutedEventArgs e)
         {
-            if(path == null || path == "")
+            try
             {
-                System.Windows.MessageBox.Show("Выберите директорию");
+                if (path == null || path == "")
+                {
+                   MessageBox.Show("Выберите директорию");
+                }
+                else
+                {
+                    int selectedRegime;
+                    regime.TryGetValue((string)regimeBox.SelectionBoxItem, out selectedRegime);
+                    matchData = FilesSeeker.SearchWithRegime(selectedRegime, path, fileNameBox.Text, stringMaskBox.Text);
+                    if(matchData != null)
+                    {
+                        resultGrid.ItemsSource = matchData;
+                        DownloadButton.IsEnabled = true;
+                    }
+                    else
+                    {
+                        DownloadButton.IsEnabled = false;
+                    }
+
+                }
             }
-            else
+            catch(Exception ex)
             {
-                int selectedRegime;
-                regime.TryGetValue((string)regimeBox.SelectionBoxItem, out selectedRegime);
-                resultGrid.ItemsSource = FilesSeeker.SearchWithRegime(selectedRegime, path, fileNameBox.Text, stringMaskBox.Text);
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void OpenExplorer(object sender, RoutedEventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            Forms.FolderBrowserDialog folderBrowserDialog = new Forms.FolderBrowserDialog();
             folderBrowserDialog.ShowDialog();
             path = folderBrowserDialog.SelectedPath;
             directoryLabel.Content = "Директория для поиска: " + folderBrowserDialog.SelectedPath;
+        }
+
+        private void Download(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

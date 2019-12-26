@@ -7,7 +7,7 @@
         xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
         xmlns:Properties="clr-namespace:Task2.Properties" x:Class="Task_2.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -15,24 +15,26 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="88*"/>
-            <ColumnDefinition Width="79*"/>
-            <ColumnDefinition Width="9*"/>
-            <ColumnDefinition Width="88*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" Content="Имя файла" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Times New Roman" Margin="99,0"/>
+        <Label Grid.Column="0" Grid.Row="0" Content="Имя файла" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Times New Roman"/>
         <TextBox x:Name="fileNameBox" Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Stretch" Height="24" Margin="10,30" TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman"/>
-        <Label Grid.Column="1" Grid.Row="0" Content="Маска строки"  HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman" Margin="92,0,65,0"/>
-        <TextBox x:Name="stringMaskBox" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Height="24" Margin="10,30" TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman" Grid.ColumnSpan="2"/>
-        <Label Grid.Column="0" Grid.Row="1" Content="Директория для поиска: " x:Name="directoryLabel" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman" Margin="64,0"/>
-        <Button Grid.Column="0" Grid.Row="1" Content="Обзор..." HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="24" Margin="10,30" Click="OpenExplorer" FontFamily="Times New Roman"/>
-        <Button Grid.Column="1" Grid.Row="1" Content="Поиск" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="auto" Click="Click" Height="25" Margin="10,30" FontFamily="Times New Roman" Grid.ColumnSpan="2"/>
+        <Label Grid.Column="1" Grid.Row="0" Content="Маска строки"  HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman" />
+        <TextBox x:Name="stringMaskBox" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Height="24" Margin="10,10,10,10" TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Директория для поиска: " x:Name="directoryLabel" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
+        <Button x:Name="OpenDirectory" Grid.Column="0" Grid.Row="1" Content="Обзор..." HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="24" Margin="10,10,10,10" Click="OpenExplorer" FontFamily="Times New Roman"/>
+        <Button Grid.Column="1" Grid.Row="1" Content="Поиск" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="auto" Click="Click" Height="25" Margin="10,10,10,10" FontFamily="Times New Roman" />
         <DataGrid x:Name="resultGrid" AutoGenerateColumns="True" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Margin="10,10,10,10" >
             <DataGrid.DataContext>
                 <local:MatchData/>
             </DataGrid.DataContext>
         </DataGrid>
-        <ComboBox x:Name="regimeBox" Grid.Column="3" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="200" FontFamily="Times New Roman"/>
+        <ComboBox x:Name="regimeBox" Grid.Column="2" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="200" FontFamily="Times New Roman"/>
+        <ComboBox x:Name="donwloadTypeBox" Grid.Column="3" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="200" FontFamily="Times New Roman"/>
+        <Button x:Name="DownloadButton" Grid.Column="3" Grid.Row= "1" Content="Скачать" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="200" Height="24" Margin="10,10,10,10" Click="Download" FontFamily="Times New Roman" IsEnabled="False"/>
     </Grid>
 </Window>

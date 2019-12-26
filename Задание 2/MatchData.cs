@@ -9,6 +9,8 @@ namespace Task_2
     /// <summary>
     /// Класс который содержит данные о файле и строке с совпадающей маской.
     /// </summary>
+    /// 
+    [Serializable]
     public class MatchData
     {
         public string FileName { get; set; }
