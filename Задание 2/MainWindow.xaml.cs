@@ -21,10 +21,18 @@ namespace Task_2
     public partial class MainWindow : Window
     {
         private string path;
+
+        private Dictionary<string, int> regime = new Dictionary<string, int>()
+        {
+            { "Поиск по маске файла" , 0},
+            { "Поиск по маске файла и строки", 1},
+            { "Поиск по всем файлам" , 2 }
+        };
+
         public MainWindow()
         {
             InitializeComponent();
-            regimeBox.ItemsSource = RegimeTranformer.regime.Values.ToList();
+            regimeBox.ItemsSource = regime.Keys.ToList();
         }
 
         private void Click(object sender, RoutedEventArgs e)
@@ -34,8 +42,10 @@ namespace Task_2
                 System.Windows.MessageBox.Show("Выберите директорию");
             }
             else
-            {              
-                resultGrid.ItemsSource = FilesSeeker.SearchWithRegime(RegimeTranformer.TransformToInt((string)regimeBox.SelectionBoxItem), path, fileNameBox.Text, stringMaskBox.Text);
+            {
+                int selectedRegime;
+                regime.TryGetValue((string)regimeBox.SelectionBoxItem, out selectedRegime);
+                resultGrid.ItemsSource = FilesSeeker.SearchWithRegime(selectedRegime, path, fileNameBox.Text, stringMaskBox.Text);
             }
         }
 

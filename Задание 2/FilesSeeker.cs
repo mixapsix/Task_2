@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,10 +82,7 @@ namespace Task_2
                                 }));
                             }
 
-                            foreach (Task task in taskList)
-                            {
-                                task.Start();
-                            }
+                            taskList.ForEach(x => x.Start());
 
                             Task.WaitAll(taskList.ToArray());
                             taskList.Clear();
@@ -107,10 +105,7 @@ namespace Task_2
                                 }));
                             }
 
-                            foreach (Task task in taskList)
-                            {
-                                task.Start();
-                            }
+                            taskList.ForEach(x => x.Start());
 
                             Task.WaitAll(taskList.ToArray());
                             taskList.Clear();
