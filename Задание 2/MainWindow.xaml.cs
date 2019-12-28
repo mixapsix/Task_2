@@ -35,7 +35,8 @@ namespace Task_2
         {
             { "Выгрузить в XML" },
             { "Выгрузить в JSON" },
-            { "Загрузить в XML" }
+            { "Загрузить из XML" },
+            { "Загрузить из JSON" },
         };
 
 
@@ -100,9 +101,14 @@ namespace Task_2
                             dataConverter.DownloadInJSON(matchData);
                             break;
                         }
-                    case "Загрузить в XML":
+                    case "Загрузить из XML":
                         {
-                            resultGrid.ItemsSource = dataConverter.UploadInXML();
+                            resultGrid.ItemsSource = dataConverter.UploadFromXML();
+                            break;
+                        }
+                    case "Загрузить из JSON":
+                        {
+                           // resultGrid.ItemsSource = dataConverter.UploadFromJSON();
                             break;
                         }
                 }

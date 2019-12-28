@@ -24,7 +24,7 @@ namespace Task_2
             }
         }
 
-        public List<MatchData> UploadInXML()
+        public List<MatchData> UploadFromXML()
         {
             XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
             OpenFileDialog fileDialog = new OpenFileDialog();
@@ -47,16 +47,39 @@ namespace Task_2
 
         public void DownloadInJSON(List<MatchData> data)
         {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.ShowDialog();
+            using (FileStream fileStream = new FileStream(folderBrowserDialog.SelectedPath + "Result.json", FileMode.OpenOrCreate))
+            {
+                JsonSerializer.SerializeAsync<List<MatchData>>(fileStream, data);
+            }
+        }
+
+        public List<MatchData> UploadFromJSON()
+        {
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true
             };
 
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.ShowDialog();
-            using (FileStream fileStream = new FileStream(folderBrowserDialog.SelectedPath + "Result.json", FileMode.OpenOrCreate))
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.ShowDialog();
+            if (Regex.IsMatch(fileDialog.FileName, "\\w*.json"))
             {
-                JsonSerializer.SerializeAsync<List<MatchData>>(fileStream, data, options);
+                using (StreamReader streamReader = new StreamReader(fileDialog.FileName))
+                {
+                    List<MatchData> matchDatas = new List<MatchData>();
+                    while (!streamReader.EndOfStream)
+                    {
+                        matchDatas.AddRange(JsonSerializer.Deserialize<List<MatchData>>(streamReader.ReadLine(), options));
+                    }
+                    return matchDatas;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Файл имеет не верный формат");
+                return null;
             }
         }
     }

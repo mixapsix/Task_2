@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Task_2"
         xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
-        xmlns:Properties="clr-namespace:Task2.Properties" x:Class="Task_2.MainWindow"
+        xmlns:Properties="clr-namespace:Task_2.Properties" x:Class="Task_2.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="900">
     <Grid>
