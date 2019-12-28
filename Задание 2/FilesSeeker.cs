@@ -51,6 +51,7 @@ namespace Task_2
                                 GetMatchedFiles(allFilePath, fileNameMask, ref matchDatas);
                             }
                         }
+
                         break;
                     }
                 case "Поиск по маске файла и строки":
@@ -93,6 +94,7 @@ namespace Task_2
 
                             taskList.Clear();
                         }
+
                         break;
                     }
             }

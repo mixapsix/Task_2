@@ -7,12 +7,13 @@ using System.Xml.Serialization;
 using System.Text.Json;
 using System.IO;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Task_2
 {
     class DataConverter
     {
-        public void ConvertToXML(List<MatchData> data)
+        public void DownloadInXML(List<MatchData> data)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
@@ -23,8 +24,28 @@ namespace Task_2
             }
         }
 
+        public List<MatchData> UploadInXML()
+        {
+            XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.ShowDialog();
+            if (Regex.IsMatch(fileDialog.FileName, "\\w*.xml"))
+            {
+                using (FileStream fileStream = new FileStream(fileDialog.FileName, FileMode.Open))
+                {
 
-        public void ConvertToJSON(List<MatchData> data)
+                    return (List<MatchData>)formatter.Deserialize(fileStream);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Файл имеет не верный формат");
+                return null;
+            }
+        }
+
+
+        public void DownloadInJSON(List<MatchData> data)
         {
             var options = new JsonSerializerOptions
             {

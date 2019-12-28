@@ -34,7 +34,8 @@ namespace Task_2
         private readonly List<string> downloadRegime = new List<string>()
         {
             { "Выгрузить в XML" },
-            { "Выгрузить в JSON" }
+            { "Выгрузить в JSON" },
+            { "Загрузить в XML" }
         };
 
 
@@ -43,6 +44,7 @@ namespace Task_2
             InitializeComponent();
             regimeBox.ItemsSource = regime;
             downloadTypeBox.ItemsSource = downloadRegime;
+            DownloadButton.IsEnabled = true;
         }
        
         private void Click(object sender, RoutedEventArgs e)
@@ -65,7 +67,6 @@ namespace Task_2
                     {
                         DownloadButton.IsEnabled = false;
                     }
-
                 }
             }
             catch(Exception ex)
@@ -91,12 +92,17 @@ namespace Task_2
                 {
                     case "Выгрузить в XML":
                         {
-                            dataConverter.ConvertToXML(matchData);
+                            dataConverter.DownloadInXML(matchData);
                             break;
                         }
                     case "Выгрузить в JSON":
                         {
-                            dataConverter.ConvertToJSON(matchData);
+                            dataConverter.DownloadInJSON(matchData);
+                            break;
+                        }
+                    case "Загрузить в XML":
+                        {
+                            resultGrid.ItemsSource = dataConverter.UploadInXML();
                             break;
                         }
                 }
