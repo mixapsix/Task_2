@@ -33,7 +33,8 @@ namespace Task_2
 
         private readonly List<string> downloadRegime = new List<string>()
         {
-            { "Выгрузить в XML"}
+            { "Выгрузить в XML" },
+            { "Выгрузить в JSON" }
         };
 
 
@@ -86,9 +87,18 @@ namespace Task_2
             if (downloadTypeBox.SelectedItem != null)
             {
                 DataConverter dataConverter = new DataConverter();
-                if (downloadTypeBox.SelectedItem.ToString() == "Выгрузить в XML")
+                switch (downloadTypeBox.SelectedItem)
                 {
-                    dataConverter.ConvertToXML(matchData);
+                    case "Выгрузить в XML":
+                        {
+                            dataConverter.ConvertToXML(matchData);
+                            break;
+                        }
+                    case "Выгрузить в JSON":
+                        {
+                            dataConverter.ConvertToJSON(matchData);
+                            break;
+                        }
                 }
             }
             else

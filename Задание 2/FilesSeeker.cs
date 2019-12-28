@@ -75,17 +75,8 @@ namespace Task_2
                                 GetMatchedFiles(allFilePath, fileNameMask, ref temp);
                             }
 
-                            foreach (MatchData data in temp)
-                            {
-                                taskList.Add(new Task(() =>
-                                {
-                                    GetMatchedData(data.FileName, lineMask, ref matchDatas);
-                                }));
-                            }
+                            Parallel.ForEach(temp, fileData => GetMatchedData(fileData.FileName, lineMask, ref matchDatas));
 
-                            taskList.ForEach(x => x.Start());
-
-                            Task.WaitAll(taskList.ToArray());
                             taskList.Clear();
                         }
                         break;
@@ -98,17 +89,8 @@ namespace Task_2
                         }
                         else
                         {
-                            foreach (string allFilePath in allFilePaths)
-                            {
-                                taskList.Add(new Task(() =>
-                                {
-                                    GetMatchedData(allFilePath, lineMask, ref matchDatas);
-                                }));
-                            }
+                            Parallel.ForEach(allFilePaths, filePath => GetMatchedData(filePath, lineMask, ref matchDatas));
 
-                            taskList.ForEach(x => x.Start());
-
-                            Task.WaitAll(taskList.ToArray());
                             taskList.Clear();
                         }
                         break;
