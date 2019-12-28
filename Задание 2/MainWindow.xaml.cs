@@ -24,17 +24,24 @@ namespace Task_2
         private string path;
         List<MatchData> matchData;
 
-        private Dictionary<string, int> regime = new Dictionary<string, int>()
+        private readonly List<string> regime = new List<string>()
         {
-            { "Поиск по маске файла" , 0},
-            { "Поиск по маске файла и строки", 1},
-            { "Поиск по всем файлам" , 2 }
+            { "Поиск по маске файла"},
+            { "Поиск по маске файла и строки"},
+            { "Поиск по всем файлам"}
         };
+
+        private readonly List<string> downloadRegime = new List<string>()
+        {
+            { "Выгрузить в XML"}
+        };
+
 
         public MainWindow()
         {
             InitializeComponent();
-            regimeBox.ItemsSource = regime.Keys.ToList();
+            regimeBox.ItemsSource = regime;
+            downloadTypeBox.ItemsSource = downloadRegime;
         }
        
         private void Click(object sender, RoutedEventArgs e)
@@ -47,9 +54,7 @@ namespace Task_2
                 }
                 else
                 {
-                    int selectedRegime;
-                    regime.TryGetValue((string)regimeBox.SelectionBoxItem, out selectedRegime);
-                    matchData = FilesSeeker.SearchWithRegime(selectedRegime, path, fileNameBox.Text, stringMaskBox.Text);
+                    matchData = FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMaskBox.Text);
                     if(matchData != null)
                     {
                         resultGrid.ItemsSource = matchData;
@@ -78,7 +83,19 @@ namespace Task_2
 
         private void Download(object sender, RoutedEventArgs e)
         {
-
+            if (downloadTypeBox.SelectedItem != null)
+            {
+                DataConverter dataConverter = new DataConverter();
+                if (downloadTypeBox.SelectedItem.ToString() == "Выгрузить в XML")
+                {
+                    dataConverter.ConvertToXML(matchData);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите режим выгрузки");
+            }
         }
+
     }
 }

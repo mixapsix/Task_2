@@ -22,7 +22,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Column="0" Grid.Row="0" Content="Имя файла" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Times New Roman"/>
-        <TextBox x:Name="fileNameBox" Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Stretch" Height="24" Margin="10,30" TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman"/>
+        <TextBox x:Name="fileNameBox" Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Stretch" Height="24" Margin="10,10,10,10" TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman"/>
         <Label Grid.Column="1" Grid.Row="0" Content="Маска строки"  HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman" />
         <TextBox x:Name="stringMaskBox" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Height="24" Margin="10,10,10,10" TextWrapping="Wrap" VerticalAlignment="Center" FontFamily="Times New Roman"/>
         <Label Grid.Column="0" Grid.Row="1" Content="Директория для поиска: " x:Name="directoryLabel" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
@@ -34,7 +34,7 @@
             </DataGrid.DataContext>
         </DataGrid>
         <ComboBox x:Name="regimeBox" Grid.Column="2" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="200" FontFamily="Times New Roman"/>
-        <ComboBox x:Name="donwloadTypeBox" Grid.Column="3" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="200" FontFamily="Times New Roman"/>
+        <ComboBox x:Name="downloadTypeBox" Grid.Column="3" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="200" FontFamily="Times New Roman"/>
         <Button x:Name="DownloadButton" Grid.Column="3" Grid.Row= "1" Content="Скачать" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="200" Height="24" Margin="10,10,10,10" Click="Download" FontFamily="Times New Roman" IsEnabled="False"/>
     </Grid>
 </Window>

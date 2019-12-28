@@ -16,5 +16,6 @@ namespace Task_2
         public string FileName { get; set; }
         public int LineNumber { get; set; }
         public string Line { get; set; }
+
     }
 }

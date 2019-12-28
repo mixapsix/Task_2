@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Task_2
 {
@@ -25,7 +26,7 @@ namespace Task_2
         /// <param name="regime"></param>
         /// <returns></returns>
         /// 
-        public static List<MatchData> SearchWithRegime(int regime, string directory, string fileNameMask = "", string lineMask = "")
+        public static List<MatchData> SearchWithRegime(string regime, string directory, string fileNameMask = "", string lineMask = "")
         {
             List<MatchData> matchDatas = new List<MatchData>();
 
@@ -37,7 +38,7 @@ namespace Task_2
 
             switch (regime)
             {
-                case 0:
+                case "Поиск по маске файла":
                     {
                         if (fileNameMask == "")
                         {
@@ -52,7 +53,7 @@ namespace Task_2
                         }
                         break;
                     }
-                case 1:
+                case "Поиск по маске файла и строки":
                     {
                         if(fileNameMask == "" && lineMask == "")
                         {
@@ -89,7 +90,7 @@ namespace Task_2
                         }
                         break;
                     }
-                case 2:
+                case "Поиск по всем файлам":
                     {
                         if (lineMask == "")
                         {
@@ -144,7 +145,6 @@ namespace Task_2
             {
                 matchDatas.Add(new MatchData() { FileName = path });
             }
-
         }
 
         private static void GetMatchedData(string path, string lineMask, ref List<MatchData> matchDatas)
@@ -154,17 +154,22 @@ namespace Task_2
                 Regex mask = new Regex($"\\w*{lineMask}\\w*");
                 int line = 1;
                 string matchString = null;
-                StreamReader streamReader = new StreamReader(path);
-                while (!streamReader.EndOfStream)
+                using (StreamReader streamReader = new StreamReader(path))
                 {
-                    if (mask.IsMatch(matchString = streamReader.ReadLine().ToString()))
+                    TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+
+                    while (!streamReader.EndOfStream)
                     {
-                        matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });
+                        if (mask.IsMatch(matchString = streamReader.ReadLine().ToString()))
+                        {
+                            matchString = Regex.Replace(matchString , @"[^\w\.@-\\%]", string.Empty);
+                            matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });
+                        }
+                        line++;
                     }
-                    line++;
                 }
             }
-            catch(IOException)
+            catch (IOException)
             {
                 throw;
             }
