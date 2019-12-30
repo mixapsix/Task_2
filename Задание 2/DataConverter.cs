@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
@@ -49,31 +49,27 @@ namespace Task_2
         {
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             folderBrowserDialog.ShowDialog();
-            using (FileStream fileStream = new FileStream(folderBrowserDialog.SelectedPath + "Result.json", FileMode.OpenOrCreate))
+            JsonSerializer serializer = new JsonSerializer();
+
+            using (StreamWriter streamWriter = new StreamWriter(folderBrowserDialog.SelectedPath + "Result.json"))
             {
-                JsonSerializer.SerializeAsync<List<MatchData>>(fileStream, data);
+                using (JsonWriter writer = new JsonTextWriter(streamWriter))
+                {
+                    serializer.Serialize(writer, data);
+                }
             }
         }
 
         public List<MatchData> UploadFromJSON()
         {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.ShowDialog();
+
             if (Regex.IsMatch(fileDialog.FileName, "\\w*.json"))
             {
                 using (StreamReader streamReader = new StreamReader(fileDialog.FileName))
                 {
-                    List<MatchData> matchDatas = new List<MatchData>();
-                    while (!streamReader.EndOfStream)
-                    {
-                        matchDatas.AddRange(JsonSerializer.Deserialize<List<MatchData>>(streamReader.ReadLine(), options));
-                    }
-                    return matchDatas;
+                    return JsonConvert.DeserializeObject<List<MatchData>>(streamReader.ReadToEnd());
                 }
             }
             else

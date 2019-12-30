@@ -108,7 +108,7 @@ namespace Task_2
                         }
                     case "Загрузить из JSON":
                         {
-                           // resultGrid.ItemsSource = dataConverter.UploadFromJSON();
+                            resultGrid.ItemsSource = dataConverter.UploadFromJSON();
                             break;
                         }
                 }
