@@ -23,6 +23,7 @@ namespace Task_2
 
         private string path;
         List<MatchData> matchData;
+        DataConverter dataConverter = new DataConverter();
 
         private readonly List<string> regime = new List<string>()
         {
@@ -35,6 +36,11 @@ namespace Task_2
         {
             { "Выгрузить в XML" },
             { "Выгрузить в JSON" },
+        };
+
+        private readonly List<string> uploadRegime = new List<string>()
+        {
+
             { "Загрузить из XML" },
             { "Загрузить из JSON" },
         };
@@ -45,7 +51,7 @@ namespace Task_2
             InitializeComponent();
             regimeBox.ItemsSource = regime;
             downloadTypeBox.ItemsSource = downloadRegime;
-            DownloadButton.IsEnabled = true;
+            uploadTypeBox.ItemsSource = uploadRegime;
         }
        
         private void Click(object sender, RoutedEventArgs e)
@@ -62,11 +68,11 @@ namespace Task_2
                     if(matchData != null)
                     {
                         resultGrid.ItemsSource = matchData;
-                        DownloadButton.IsEnabled = true;
+                        downloadButton.IsEnabled = true;
                     }
                     else
                     {
-                        DownloadButton.IsEnabled = false;
+                        downloadButton.IsEnabled = false;
                     }
                 }
             }
@@ -88,7 +94,6 @@ namespace Task_2
         {
             if (downloadTypeBox.SelectedItem != null)
             {
-                DataConverter dataConverter = new DataConverter();
                 switch (downloadTypeBox.SelectedItem)
                 {
                     case "Выгрузить в XML":
@@ -101,16 +106,6 @@ namespace Task_2
                             dataConverter.DownloadInJSON(matchData);
                             break;
                         }
-                    case "Загрузить из XML":
-                        {
-                            resultGrid.ItemsSource = dataConverter.UploadFromXML();
-                            break;
-                        }
-                    case "Загрузить из JSON":
-                        {
-                            resultGrid.ItemsSource = dataConverter.UploadFromJSON();
-                            break;
-                        }
                 }
             }
             else
@@ -119,5 +114,21 @@ namespace Task_2
             }
         }
 
+        private void Upload(object sender, RoutedEventArgs e)
+        {
+            switch(uploadTypeBox.SelectedItem)
+            {
+                case "Загрузить из XML":
+                    {
+                        resultGrid.ItemsSource = dataConverter.UploadFromXML();
+                        break;
+                    }
+                case "Загрузить из JSON":
+                    {
+                        resultGrid.ItemsSource = dataConverter.UploadFromJSON();
+                        break;
+                    }
+            }
+        }
     }
 }
