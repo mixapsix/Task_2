@@ -115,7 +115,7 @@ namespace Task_2
                 }
                 allFiles.AddRange(System.IO.Directory.GetFiles(path).ToList<string>());
             }
-            catch(UnauthorizedAccessException)
+            catch
             {
                 throw;
             }
@@ -152,7 +152,7 @@ namespace Task_2
                     }
                 }
             }
-            catch (IOException)
+            catch 
             {
                 throw;
             }

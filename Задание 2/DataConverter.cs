@@ -13,69 +13,98 @@ namespace Task_2
 {
     class DataConverter
     {
+
         public void DownloadInXML(List<MatchData> data)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.ShowDialog();
-            using (FileStream fileStream = new FileStream(folderBrowserDialog.SelectedPath + "Result.xml", FileMode.OpenOrCreate)) 
+            try
             {
+                XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                folderBrowserDialog.ShowDialog();
+                using (FileStream fileStream = new FileStream(folderBrowserDialog.SelectedPath + "Result.xml", FileMode.OpenOrCreate))
+                {
                     formatter.Serialize(fileStream, data);
+                }
+            }
+            catch
+            {
+                throw;
             }
         }
 
         public List<MatchData> UploadFromXML()
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.ShowDialog();
-            if (Regex.IsMatch(fileDialog.FileName, "\\w*.xml"))
+            try
             {
-                using (FileStream fileStream = new FileStream(fileDialog.FileName, FileMode.Open))
+                XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
+                OpenFileDialog fileDialog = new OpenFileDialog();
+                fileDialog.ShowDialog();
+                if (Regex.IsMatch(fileDialog.FileName, "\\w*.xml"))
                 {
+                    using (FileStream fileStream = new FileStream(fileDialog.FileName, FileMode.Open))
+                    {
 
-                    return (List<MatchData>)formatter.Deserialize(fileStream);
+                        return (List<MatchData>)formatter.Deserialize(fileStream);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Файл имеет не верный формат");
+                    return null;
                 }
             }
-            else
+            catch
             {
-                MessageBox.Show("Файл имеет не верный формат");
-                return null;
+                throw;
             }
         }
 
 
         public void DownloadInJSON(List<MatchData> data)
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.ShowDialog();
-            JsonSerializer serializer = new JsonSerializer();
-
-            using (StreamWriter streamWriter = new StreamWriter(folderBrowserDialog.SelectedPath + "Result.json"))
+            try
             {
-                using (JsonWriter writer = new JsonTextWriter(streamWriter))
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                folderBrowserDialog.ShowDialog();
+                JsonSerializer serializer = new JsonSerializer();
+
+                using (StreamWriter streamWriter = new StreamWriter(folderBrowserDialog.SelectedPath + "Result.json"))
                 {
-                    serializer.Serialize(writer, data);
+                    using (JsonWriter writer = new JsonTextWriter(streamWriter))
+                    {
+                        serializer.Serialize(writer, data);
+                    }
                 }
+            }
+            catch
+            {
+                throw;
             }
         }
 
         public List<MatchData> UploadFromJSON()
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.ShowDialog();
-
-            if (Regex.IsMatch(fileDialog.FileName, "\\w*.json"))
+            try
             {
-                using (StreamReader streamReader = new StreamReader(fileDialog.FileName))
+                OpenFileDialog fileDialog = new OpenFileDialog();
+                fileDialog.ShowDialog();
+
+                if (Regex.IsMatch(fileDialog.FileName, "\\w*.json"))
                 {
-                    return JsonConvert.DeserializeObject<List<MatchData>>(streamReader.ReadToEnd());
+                    using (StreamReader streamReader = new StreamReader(fileDialog.FileName))
+                    {
+                        return JsonConvert.DeserializeObject<List<MatchData>>(streamReader.ReadToEnd());
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Файл имеет не верный формат");
+                    return null;
                 }
             }
-            else
+            catch
             {
-                MessageBox.Show("Файл имеет не верный формат");
-                return null;
+                throw;
             }
         }
     }
