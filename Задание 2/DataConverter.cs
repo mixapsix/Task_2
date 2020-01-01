@@ -21,7 +21,7 @@ namespace Task_2
                 XmlSerializer formatter = new XmlSerializer(typeof(List<MatchData>));
                 FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
                 folderBrowserDialog.ShowDialog();
-                using (FileStream fileStream = new FileStream(folderBrowserDialog.SelectedPath + "Result.xml", FileMode.OpenOrCreate))
+                using (FileStream fileStream = new FileStream(folderBrowserDialog.SelectedPath + "//Result.xml", FileMode.Create))
                 {
                     formatter.Serialize(fileStream, data);
                 }
@@ -68,7 +68,7 @@ namespace Task_2
                 folderBrowserDialog.ShowDialog();
                 JsonSerializer serializer = new JsonSerializer();
 
-                using (StreamWriter streamWriter = new StreamWriter(folderBrowserDialog.SelectedPath + "Result.json"))
+                using (StreamWriter streamWriter = new StreamWriter(folderBrowserDialog.SelectedPath + "//Result.json"))
                 {
                     using (JsonWriter writer = new JsonTextWriter(streamWriter))
                     {

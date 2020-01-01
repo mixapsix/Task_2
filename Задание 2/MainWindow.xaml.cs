@@ -89,7 +89,7 @@ namespace Task_2
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message + "-" + ex.TargetSite.Name);
+                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name);
             }
         }
 
@@ -103,43 +103,68 @@ namespace Task_2
 
         private void Download(object sender, RoutedEventArgs e)
         {
-            if (downloadTypeBox.SelectedItem != null)
+            try
             {
-                switch (downloadTypeBox.SelectedItem)
+                if (downloadTypeBox.SelectedItem != null)
                 {
-                    case "Выгрузить в XML":
-                        {
-                            dataConverter.DownloadInXML(matchData);
-                            break;
-                        }
-                    case "Выгрузить в JSON":
-                        {
-                            dataConverter.DownloadInJSON(matchData);
-                            break;
-                        }
+                    switch (downloadTypeBox.SelectedItem)
+                    {
+                        case "Выгрузить в XML":
+                            {
+                                dataConverter.DownloadInXML(matchData);
+                                break;
+                            }
+                        case "Выгрузить в JSON":
+                            {
+                                dataConverter.DownloadInJSON(matchData);
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Выберите режим выгрузки");
                 }
             }
-            else
+            catch(Exception ex)
             {
-                MessageBox.Show("Выберите режим выгрузки");
+                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name);
             }
         }
 
         private void Upload(object sender, RoutedEventArgs e)
         {
-            switch(uploadTypeBox.SelectedItem)
+            try
             {
-                case "Загрузить из XML":
-                    {
-                        resultGrid.ItemsSource = dataConverter.UploadFromXML();
-                        break;
-                    }
-                case "Загрузить из JSON":
-                    {
-                        resultGrid.ItemsSource = dataConverter.UploadFromJSON();
-                        break;
-                    }
+                switch (uploadTypeBox.SelectedItem)
+                {
+                    case "Загрузить из XML":
+                        {
+                            matchData = dataConverter.UploadFromXML();
+                            resultGrid.ItemsSource = matchData;
+                            if (resultGrid.ItemsSource != null)
+                            {
+                                downloadButton.IsEnabled = true;
+                            }
+                            break;
+                        }
+                    case "Загрузить из JSON":
+                        {
+                            matchData = dataConverter.UploadFromJSON();
+                            resultGrid.ItemsSource = matchData;
+                            if (resultGrid.ItemsSource != null)
+                            {
+                                downloadButton.IsEnabled = true;
+                            }
+                            break;
+                        }
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name);
+            }
+            
         }
 
         private void stringMaskBox_KeyDown(object sender, KeyEventArgs e)
