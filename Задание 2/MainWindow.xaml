@@ -30,6 +30,7 @@
         <TextBox x:Name="stringMaskBox" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Height="24" Margin="10,10,10,10" TextWrapping="Wrap" VerticalAlignment="Center"  FontFamily="Times New Roman" KeyDown="stringMaskBox_KeyDown"/>
         <Label Grid.Column="0" Grid.Row="2" Content="Директория для поиска: " x:Name="directoryLabel" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.ColumnSpan="2" FontFamily="Times New Roman"/>
         <Button x:Name="openDirectory" Grid.Column="0" Grid.Row="2" Content="Обзор..." HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="auto" Height="25" Margin="10,10,10,10" Click="OpenExplorer" Grid.ColumnSpan="2" FontFamily="Times New Roman"/>
+        <Label Grid.Column="0" Grid.Row="3" Content="Режим поиска" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.ColumnSpan="2" FontFamily="Times New Roman"/>
         <ComboBox x:Name="regimeBox" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="320" Height="24" Grid.ColumnSpan="2" FontFamily="Times New Roman"/>
         <Button Grid.Column="0" Grid.Row="4" Content="Поиск" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="auto" Click="Click" Height="25" Margin="10,10,10,10" Grid.ColumnSpan="2" FontFamily="Times New Roman" />
         <DataGrid x:Name="resultGrid" AutoGenerateColumns="True" Grid.Column="2" Grid.Row="0" Grid.RowSpan="7" Margin="10,10,10,10">
@@ -37,8 +38,10 @@
                 <local:MatchData/>
             </DataGrid.DataContext>
         </DataGrid>
+        <Label Grid.Column="0" Grid.Row="5" Content="Режимы выгрузки файла" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
         <ComboBox x:Name="downloadTypeBox" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="130" Height="24" FontFamily="Times New Roman"/>
-        <Button x:Name="downloadButton" Grid.Column="0" Grid.Row= "6" Content="Скачать" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="130" Height="24" Margin="10,10,10,10" Click="Download" FontFamily="Times New Roman" IsEnabled="False"/>
+        <Button x:Name="downloadButton" Grid.Column="0" Grid.Row= "6" Content="Выгрузить" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="130" Height="24" Margin="10,10,10,10" Click="Download" FontFamily="Times New Roman" IsEnabled="False"/>
+        <Label Grid.Column="1" Grid.Row="5" Content="Режимы загрузки файла" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
         <ComboBox x:Name="uploadTypeBox" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="130" Height="24" FontFamily="Times New Roman"/>
         <Button x:Name="uplaodButton" Grid.Column="1" Grid.Row= "6" Content="Загрузить" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="130" Height="24" Margin="10,10,10,10" Click="Upload" FontFamily="Times New Roman"/>
         <ListBox x:Name="maskBox" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Height="60" Margin="10,10,10,10" VerticalAlignment="Center"  FontFamily="Times New Roman" SelectionChanged="maskBox_SelectionChanged" SelectionMode="Multiple"/>

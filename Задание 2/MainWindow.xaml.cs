@@ -97,8 +97,11 @@ namespace Task_2
         {
             Forms.FolderBrowserDialog folderBrowserDialog = new Forms.FolderBrowserDialog();
             folderBrowserDialog.ShowDialog();
-            path = folderBrowserDialog.SelectedPath;
-            directoryLabel.Content = "Директория для поиска: " + folderBrowserDialog.SelectedPath;
+            if (folderBrowserDialog.SelectedPath != "")
+            {
+                path = folderBrowserDialog.SelectedPath;
+                directoryLabel.Content = "Директория для поиска: " + folderBrowserDialog.SelectedPath;
+            }
         }
 
         private void Download(object sender, RoutedEventArgs e)
