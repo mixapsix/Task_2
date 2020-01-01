@@ -22,8 +22,9 @@ namespace Task_2
     {
 
         private string path;
-        List<MatchData> matchData;
+        List<MatchData> matchData = new List<MatchData>();
         DataConverter dataConverter = new DataConverter();
+        List<string> stringMaskList = new List<string>();
 
         private readonly List<string> regime = new List<string>()
         {
@@ -51,7 +52,7 @@ namespace Task_2
             InitializeComponent();
             regimeBox.ItemsSource = regime;
             downloadTypeBox.ItemsSource = downloadRegime;
-            uploadTypeBox.ItemsSource = uploadRegime;
+            uploadTypeBox.ItemsSource = uploadRegime;            
         }
        
         private void Click(object sender, RoutedEventArgs e)
@@ -64,7 +65,17 @@ namespace Task_2
                 }
                 else
                 {
-                    matchData = FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMaskBox.Text);
+                    resultGrid.ItemsSource = null;
+                    matchData.Clear();
+                    foreach (string stringMask in stringMaskList)
+                    {
+                        matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMask));
+                    }
+                    if (stringMaskList.Count == 0)
+                    {
+                        matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMaskBox.Text));
+                    }
+
                     if(matchData != null)
                     {
                         resultGrid.ItemsSource = matchData;
@@ -128,6 +139,25 @@ namespace Task_2
                         resultGrid.ItemsSource = dataConverter.UploadFromJSON();
                         break;
                     }
+            }
+        }
+
+        private void stringMaskBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                stringMaskList.Add(stringMaskBox.Text.ToString());
+                maskBox.ItemsSource = null;
+                maskBox.ItemsSource = stringMaskList;
+            }          
+        }
+
+        private void maskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            stringMaskList.Clear();
+            foreach (var mask in maskBox.SelectedItems)
+            {
+                stringMaskList.Add(mask.ToString());
             }
         }
     }
