@@ -66,14 +66,10 @@ namespace Task_2
             {
                 FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
                 folderBrowserDialog.ShowDialog();
-                JsonSerializer serializer = new JsonSerializer();
 
                 using (StreamWriter streamWriter = new StreamWriter(folderBrowserDialog.SelectedPath + "//Result.json"))
                 {
-                    using (JsonWriter writer = new JsonTextWriter(streamWriter))
-                    {
-                        serializer.Serialize(writer, data);
-                    }
+                    streamWriter.Write(JsonConvert.SerializeObject(data, Formatting.Indented));
                 }
             }
             catch
