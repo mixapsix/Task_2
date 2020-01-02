@@ -26,23 +26,32 @@ namespace Task_2
         /// <param name="regime"></param>
         /// <returns></returns>
         /// 
-        public static List<MatchData> SearchWithRegime(string regime, string directory, string fileNameMask = "", string lineMask = "")
+        public static List<MatchData> SearchWithRegime(string regime, string directory = "", string fileNameMask = "", string lineMask = "")
         {
             List<MatchData> matchDatas = new List<MatchData>();
 
             List<string> allFilePaths = new List<string>();
 
             List<Task> taskList = new List<Task>();
-
-            GetAllFiles(directory, ref allFilePaths);
-
+            if(directory == null)
+            {
+                directory = "";
+            }
+            if (directory != "" )
+            {
+                GetAllFiles(directory, ref allFilePaths);
+            }
             switch (regime)
             {
                 case "Поиск по маске файла":
                     {
-                        if (fileNameMask == "")
+                        if (directory == "")
                         {
-                           MessageBox.Show("Введите имя файла");
+                            MessageBox.Show("Введите директорию");
+                        }
+                        else if (fileNameMask == "")
+                        {
+                            MessageBox.Show("Введите имя файла");
                         }
                         else
                         {
@@ -55,7 +64,11 @@ namespace Task_2
                     }
                 case "Поиск по маске файла и строки":
                     {
-                        if(fileNameMask == "" && lineMask == "")
+                        if (directory == "")
+                        {
+                            MessageBox.Show("Введите директорию");
+                        }
+                        else if (fileNameMask == "" && lineMask == "")
                         {
                             MessageBox.Show("Введите имя файла и маску строки");
                         }
@@ -83,7 +96,11 @@ namespace Task_2
                     }
                 case "Поиск по всем файлам":
                     {
-                        if (lineMask == "")
+                        if (directory == "")
+                        {
+                            MessageBox.Show("Введите директорию");
+                        }
+                        else if (lineMask == "")
                         {
                             MessageBox.Show("Введите маску строки");
                         }
@@ -96,7 +113,26 @@ namespace Task_2
 
                         break;
                     }
+                case "Поиск по выбранным файлам":
+                    {
+                        if (fileNameMask == "" && lineMask == "")
+                        {
+                            MessageBox.Show("Введите имена файлов и маску строки");
+                        }
+                        else if (fileNameMask == "")
+                        {
+                            MessageBox.Show("Выберите файлы");
+                        }
+                        else if(lineMask == "")
+                        {
+                            MessageBox.Show("Введите маску строки");
+                        }
+                        else
+                            GetMatchedData(fileNameMask, lineMask,ref matchDatas);
+                        break;
+                    }
             }
+
             return matchDatas;
         }
 

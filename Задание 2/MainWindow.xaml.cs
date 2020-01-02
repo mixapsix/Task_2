@@ -24,13 +24,15 @@ namespace Task_2
         private string path;
         List<MatchData> matchData = new List<MatchData>();
         DataConverter dataConverter = new DataConverter();
-        List<string> stringMaskList = new List<string>();
+        List<string> lineMaskList = new List<string>();
+        List<string> fileNameMaskList = new List<string>();
 
         private readonly List<string> regime = new List<string>()
         {
             { "Поиск по маске файла"},
             { "Поиск по маске файла и строки"},
-            { "Поиск по всем файлам"}
+            { "Поиск по всем файлам"},
+            { "Поиск по выбранным файлам"}
         };
 
         private readonly List<string> downloadRegime = new List<string>()
@@ -59,32 +61,43 @@ namespace Task_2
         {
             try
             {
-                if (path == null || path == "")
+                resultGrid.ItemsSource = null;
+                matchData.Clear();
+
+                if(fileNameMaskList.Count != 0 && regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
                 {
-                   MessageBox.Show("Выберите директорию");
+                    foreach (string mask in fileNameMaskList)
+                    {
+                        if (lineMaskList.Count == 0)
+                        {
+                            matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, stringMaskBox.Text));
+                        }
+                        else 
+                        {
+                            foreach (string stringMask in lineMaskList)
+                            {
+                                matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, stringMask));
+                            }
+                        }                           
+                    }
+                }
+                else if(regimeBox.SelectedItem?.ToString() =="Поиск по выбранным файлам")
+                {
+                    MessageBox.Show("Выберите файлы для поиска");
+                }
+                else 
+                { 
+                    matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMaskBox.Text)); 
+                }
+                
+                if (matchData != null)
+                {
+                    resultGrid.ItemsSource = matchData;
+                    downloadButton.IsEnabled = true;
                 }
                 else
                 {
-                    resultGrid.ItemsSource = null;
-                    matchData.Clear();
-                    foreach (string stringMask in stringMaskList)
-                    {
-                        matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMask));
-                    }
-                    if (stringMaskList.Count == 0)
-                    {
-                        matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMaskBox.Text));
-                    }
-
-                    if(matchData != null)
-                    {
-                        resultGrid.ItemsSource = matchData;
-                        downloadButton.IsEnabled = true;
-                    }
-                    else
-                    {
-                        downloadButton.IsEnabled = false;
-                    }
+                    downloadButton.IsEnabled = false;
                 }
             }
             catch(Exception ex)
@@ -174,19 +187,49 @@ namespace Task_2
         {
             if (e.Key == Key.Enter)
             {
-                stringMaskList.Add(stringMaskBox.Text.ToString());
+                lineMaskList.Add(stringMaskBox.Text.ToString());
                 maskBox.ItemsSource = null;
-                maskBox.ItemsSource = stringMaskList;
+                maskBox.ItemsSource = lineMaskList;
             }          
         }
 
         private void maskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            stringMaskList.Clear();
+            lineMaskList.Clear();
             foreach (var mask in maskBox.SelectedItems)
             {
-                stringMaskList.Add(mask.ToString());
+                lineMaskList.Add(mask.ToString());
             }
+        }
+
+        private void fileNameMaskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            fileNameMaskList.Clear();
+            foreach(var mask in fileNameMaskBox.SelectedItems)
+            {
+                fileNameMaskList.Add(mask.ToString());
+            }
+        }
+
+        private void fileNameMaskBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            fileNameMaskBox.ItemsSource = null;
+            fileNameMaskList.Clear();
+        }
+
+        private void fileNameMaskBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Forms.OpenFileDialog fileDialog = new Forms.OpenFileDialog();
+            fileDialog.ShowDialog();
+            fileNameMaskList.Add(fileDialog.FileName);
+            fileNameMaskBox.ItemsSource = null;
+            fileNameMaskBox.ItemsSource = fileNameMaskList;
+        }
+
+        private void maskBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            lineMaskList.Clear();
+            maskBox.ItemsSource = null;
         }
     }
 }
