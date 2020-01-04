@@ -70,7 +70,7 @@ namespace Task_2
                     {
                         if (lineMaskList.Count == 0)
                         {
-                            matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, stringMaskBox.Text));
+                            matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, lineBox.Text));
                         }
                         else 
                         {
@@ -81,13 +81,24 @@ namespace Task_2
                         }                           
                     }
                 }
-                else if(regimeBox.SelectedItem?.ToString() =="Поиск по выбранным файлам")
+                else if(regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
                 {
                     MessageBox.Show("Выберите файлы для поиска");
                 }
                 else 
                 { 
-                    matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMaskBox.Text)); 
+                    if (lineMaskList.Count == 0 || regimeBox.SelectedItem?.ToString() == "Поиск по маске файла")
+                    {
+                        matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                    }
+                    else
+                    {
+                        foreach (string stringMask in lineMaskList)
+                        {
+                            matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMask));
+                        }
+                    }
+
                 }
                 
                 if (matchData != null)
@@ -183,31 +194,51 @@ namespace Task_2
             
         }
 
-        private void stringMaskBox_KeyDown(object sender, KeyEventArgs e)
+        private void lineBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                lineMaskList.Add(stringMaskBox.Text.ToString());
-                maskBox.ItemsSource = null;
-                maskBox.ItemsSource = lineMaskList;
+                lineMaskList.Add(lineBox.Text.ToString());
+                lineMaskBox.ItemsSource = null;
+                lineMaskBox.ItemsSource = lineMaskList;
             }          
         }
 
-        private void maskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void lineMaskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             lineMaskList.Clear();
-            foreach (var mask in maskBox.SelectedItems)
+            if (lineMaskBox.SelectedItems.Count > 0)
             {
-                lineMaskList.Add(mask.ToString());
+                foreach (var mask in lineMaskBox.SelectedItems)
+                {
+                    lineMaskList.Add(mask.ToString());
+                }
+            }
+            else
+            {
+                foreach (var mask in lineMaskBox.Items)
+                {
+                    lineMaskList.Add(mask.ToString());
+                }
             }
         }
 
         private void fileNameMaskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             fileNameMaskList.Clear();
-            foreach(var mask in fileNameMaskBox.SelectedItems)
+            if (fileNameMaskBox.SelectedItems.Count > 0)
             {
-                fileNameMaskList.Add(mask.ToString());
+                foreach (var mask in fileNameMaskBox.SelectedItems)
+                {
+                    fileNameMaskList.Add(mask.ToString());
+                }
+            }
+            else
+            {
+                foreach (var mask in fileNameMaskBox.Items)
+                {
+                    lineMaskList.Add(mask.ToString());
+                }
             }
         }
 
@@ -226,10 +257,11 @@ namespace Task_2
             fileNameMaskBox.ItemsSource = fileNameMaskList;
         }
 
-        private void maskBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void lineMaskBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             lineMaskList.Clear();
-            maskBox.ItemsSource = null;
+            lineMaskBox.ItemsSource = null;
         }
+
     }
 }
