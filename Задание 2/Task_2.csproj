@@ -110,6 +110,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LineChanger.cs" />
     <Compile Include="DataConverter.cs" />
     <Compile Include="MatchData.cs" />
     <Compile Include="FilesSeeker.cs" />

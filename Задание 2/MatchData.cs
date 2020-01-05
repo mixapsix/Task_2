@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Task_2
 {
@@ -17,5 +15,32 @@ namespace Task_2
         public int LineNumber { get; set; }
         public string Line { get; set; }
 
+        public byte[] ConvertToByte()
+        {
+            return Encoding.UTF8.GetBytes(Line);
+        }
+
+        public int countSymbols()
+        {
+            using (StreamReader streamReader = new StreamReader(FileName))
+            {
+                int lineCount = 0;
+                int symbols = 0;
+                while (lineCount < LineNumber)
+                {
+                    
+                    if(streamReader.Read() != 13)
+                    {
+                        symbols++;
+                    }
+                    else
+                    {
+                        symbols++;
+                        lineCount++;
+                    }
+                }
+                return symbols;
+            }
+        }
     }
 }
