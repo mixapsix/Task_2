@@ -22,24 +22,32 @@ namespace Task_2
 
         public int countSymbols()
         {
-            using (StreamReader streamReader = new StreamReader(FileName))
+            try
             {
-                int lineCount = 0;
-                int symbols = 0;
-                while (lineCount < LineNumber)
+                using (StreamReader streamReader = new StreamReader(FileName))
                 {
-                    
-                    if(streamReader.Read() != 13)
+                    int lineCount = 0;
+                    int symbols = 0;
+                    int temp;
+                    while (lineCount < LineNumber - 1)
                     {
-                        symbols++;
+                        temp = streamReader.Read();
+                        if (temp != 13 && temp != 10)
+                        {
+                            symbols++;
+                        }
+                        else
+                        {
+                            symbols++;
+                            lineCount++;
+                        }
                     }
-                    else
-                    {
-                        symbols++;
-                        lineCount++;
-                    }
+                    return symbols;
                 }
-                return symbols;
+            }
+            catch
+            {
+                throw;
             }
         }
     }

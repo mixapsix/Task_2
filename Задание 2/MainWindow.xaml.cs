@@ -14,6 +14,7 @@ namespace Task_2
         private string path;
         List<MatchData> matchData = new List<MatchData>();
         DataConverter dataConverter = new DataConverter();
+        LineChanger lineChanger = new LineChanger();
         List<string> lineMaskList = new List<string>();
         List<string> fileNameMaskList = new List<string>();
 
@@ -255,9 +256,15 @@ namespace Task_2
 
         private void resultGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LineChanger lineChanger = new LineChanger();
-            lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem);
-            MessageBox.Show("Замена произведена");
+            try
+            {
+                lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem);
+                MessageBox.Show("Замена произведена");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name + "\n" );
+            }
         }
     }
 }
