@@ -12,13 +12,14 @@ namespace Task_2
     {
 
         private string path;
-        List<MatchData> matchData = new List<MatchData>();
+        List<MatchData> matchDatas = new List<MatchData>();
         DataConverter dataConverter = new DataConverter();
         LineChanger lineChanger = new LineChanger();
-        List<string> lineMaskList = new List<string>();
-        List<string> fileNameMaskList = new List<string>();
+        List<string> linesMaskList = new List<string>();
+        List<string> filesNameMaskList = new List<string>();
+        Forms.ContextMenuStrip contextMenu = new Forms.ContextMenuStrip();
 
-        private readonly List<string> regime = new List<string>()
+        private readonly List<string> regimes = new List<string>()
         {
             { "Поиск по маске файла"},
             { "Поиск по маске файла и строки"},
@@ -26,26 +27,34 @@ namespace Task_2
             { "Поиск по выбранным файлам"}
         };
 
-        private readonly List<string> downloadRegime = new List<string>()
+        private readonly List<string> downloadRegimes = new List<string>()
         {
             { "Выгрузить в XML" },
             { "Выгрузить в JSON" },
         };
 
-        private readonly List<string> uploadRegime = new List<string>()
+        private readonly List<string> uploadRegimes = new List<string>()
         {
 
             { "Загрузить из XML" },
             { "Загрузить из JSON" },
         };
 
+        private readonly List<string> contextItems = new List<string>()
+        {
+
+            { "Удалить строку" },
+            { "Изменить строку" },
+            {"Восстановить строку"}
+        };
+
 
         public MainWindow()
         {
             InitializeComponent();
-            regimeBox.ItemsSource = regime;
-            downloadTypeBox.ItemsSource = downloadRegime;
-            uploadTypeBox.ItemsSource = uploadRegime;            
+            regimeBox.ItemsSource = regimes;
+            downloadTypeBox.ItemsSource = downloadRegimes;
+            uploadTypeBox.ItemsSource = uploadRegimes;
         }
        
         private void Click(object sender, RoutedEventArgs e)
@@ -53,21 +62,21 @@ namespace Task_2
             try
             {
                 resultGrid.ItemsSource = null;
-                matchData.Clear();
+                matchDatas.Clear();
 
-                if(fileNameMaskList.Count != 0 && regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
+                if(filesNameMaskList.Count != 0 && regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
                 {
-                    foreach (string mask in fileNameMaskList)
+                    foreach (string mask in filesNameMaskList)
                     {
-                        if (lineMaskList.Count == 0)
+                        if (linesMaskList.Count == 0)
                         {
-                            matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, lineBox.Text));
+                            matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, lineBox.Text));
                         }
                         else 
                         {
-                            foreach (string stringMask in lineMaskList)
+                            foreach (string stringMask in linesMaskList)
                             {
-                                matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, stringMask));
+                                matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, stringMask));
                             }
                         }                           
                     }
@@ -78,23 +87,23 @@ namespace Task_2
                 }
                 else 
                 { 
-                    if (lineMaskList.Count == 0 || regimeBox.SelectedItem?.ToString() == "Поиск по маске файла")
+                    if (linesMaskList.Count == 0 || regimeBox.SelectedItem?.ToString() == "Поиск по маске файла")
                     {
-                        matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                        matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
                     }
                     else
                     {
-                        foreach (string stringMask in lineMaskList)
+                        foreach (string stringMask in linesMaskList)
                         {
-                            matchData.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMask));
+                            matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMask));
                         }
                     }
 
                 }
                 
-                if (matchData != null)
+                if (matchDatas != null)
                 {
-                    resultGrid.ItemsSource = matchData;
+                    resultGrid.ItemsSource = matchDatas;
                     downloadButton.IsEnabled = true;
                 }
                 else
@@ -129,12 +138,12 @@ namespace Task_2
                     {
                         case "Выгрузить в XML":
                             {
-                                dataConverter.DownloadInXML(matchData);
+                                dataConverter.DownloadInXML(matchDatas);
                                 break;
                             }
                         case "Выгрузить в JSON":
                             {
-                                dataConverter.DownloadInJSON(matchData);
+                                dataConverter.DownloadInJSON(matchDatas);
                                 break;
                             }
                     }
@@ -158,8 +167,8 @@ namespace Task_2
                 {
                     case "Загрузить из XML":
                         {
-                            matchData = dataConverter.UploadFromXML();
-                            resultGrid.ItemsSource = matchData;
+                            matchDatas = dataConverter.UploadFromXML();
+                            resultGrid.ItemsSource = matchDatas;
                             if (resultGrid.ItemsSource != null)
                             {
                                 downloadButton.IsEnabled = true;
@@ -168,8 +177,8 @@ namespace Task_2
                         }
                     case "Загрузить из JSON":
                         {
-                            matchData = dataConverter.UploadFromJSON();
-                            resultGrid.ItemsSource = matchData;
+                            matchDatas = dataConverter.UploadFromJSON();
+                            resultGrid.ItemsSource = matchDatas;
                             if (resultGrid.ItemsSource != null)
                             {
                                 downloadButton.IsEnabled = true;
@@ -189,46 +198,46 @@ namespace Task_2
         {
             if (e.Key == Key.Enter)
             {
-                lineMaskList.Add(lineBox.Text.ToString());
+                linesMaskList.Add(lineBox.Text.ToString());
                 lineMaskBox.ItemsSource = null;
-                lineMaskBox.ItemsSource = lineMaskList;
+                lineMaskBox.ItemsSource = linesMaskList;
             }          
         }
 
         private void lineMaskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            lineMaskList.Clear();
+            linesMaskList.Clear();
             if (lineMaskBox.SelectedItems.Count > 0)
             {
                 foreach (var mask in lineMaskBox.SelectedItems)
                 {
-                    lineMaskList.Add(mask.ToString());
+                    linesMaskList.Add(mask.ToString());
                 }
             }
             else
             {
                 foreach (var mask in lineMaskBox.Items)
                 {
-                    lineMaskList.Add(mask.ToString());
+                    linesMaskList.Add(mask.ToString());
                 }
             }
         }
 
         private void fileNameMaskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            fileNameMaskList.Clear();
+            filesNameMaskList.Clear();
             if (fileNameMaskBox.SelectedItems.Count > 0)
             {
                 foreach (var mask in fileNameMaskBox.SelectedItems)
                 {
-                    fileNameMaskList.Add(mask.ToString());
+                    filesNameMaskList.Add(mask.ToString());
                 }
             }
             else
             {
                 foreach (var mask in fileNameMaskBox.Items)
                 {
-                    lineMaskList.Add(mask.ToString());
+                    linesMaskList.Add(mask.ToString());
                 }
             }
         }
@@ -236,34 +245,36 @@ namespace Task_2
         private void fileNameMaskBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             fileNameMaskBox.ItemsSource = null;
-            fileNameMaskList.Clear();
+            filesNameMaskList.Clear();
         }
 
         private void fileNameMaskBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Forms.OpenFileDialog fileDialog = new Forms.OpenFileDialog();
             fileDialog.ShowDialog();
-            fileNameMaskList.Add(fileDialog.FileName);
+            filesNameMaskList.Add(fileDialog.FileName);
             fileNameMaskBox.ItemsSource = null;
-            fileNameMaskBox.ItemsSource = fileNameMaskList;
+            fileNameMaskBox.ItemsSource = filesNameMaskList;
         }
 
         private void lineMaskBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            lineMaskList.Clear();
+            linesMaskList.Clear();
             lineMaskBox.ItemsSource = null;
         }
 
-        private void resultGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void resultGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem);
-                MessageBox.Show("Замена произведена");
+                resultGrid.SelectedItem = lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem, "del");
+                MessageBox.Show("Строка удалена");
+                resultGrid.ItemsSource = null;
+                resultGrid.ItemsSource = matchDatas;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name + "\n" );
+                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name + "\n");
             }
         }
     }
