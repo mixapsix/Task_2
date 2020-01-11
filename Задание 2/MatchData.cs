@@ -25,26 +25,51 @@ namespace Task_2
         {
             try
             {
-                using (StreamReader streamReader = new StreamReader(FileName))
+                int lineCount = 0;
+                int symbols = 0;
+                int temp;
+                if (Line != null)
                 {
-                    int lineCount = 0;
-                    int symbols = 0;
-                    int temp;
-                    while (lineCount < LineNumber - 1)
+                    using (StreamReader streamReader = new StreamReader(FileName))
                     {
-                        temp = streamReader.Read();
-                        if (temp != 13 && temp != 10)
+
+                        while (lineCount < LineNumber - 1)
                         {
-                            symbols++;
+                            temp = streamReader.Read();
+                            if (temp != 13 && temp != 10)
+                            {
+                                symbols++;
+                            }
+                            else
+                            {
+                                symbols++;
+                                lineCount++;
+                            }
                         }
-                        else
-                        {
-                            symbols++;
-                            lineCount++;
-                        }
+                        return symbols;
                     }
-                    return symbols;
                 }
+                else
+                {
+                    using (StreamReader streamReader = new StreamReader(FileName))
+                    {
+
+                        while (lineCount < LineNumber - 1)
+                        {
+                            temp = streamReader.Read();
+                            if (temp != 13 && temp != 10)
+                            {
+                                symbols++;
+                            }
+                            else
+                            {
+                                symbols++;
+                                lineCount++;
+                            }
+                        }
+                        return symbols;
+                    }
+                }                
             }
             catch
             {

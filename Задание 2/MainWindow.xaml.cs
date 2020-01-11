@@ -17,7 +17,6 @@ namespace Task_2
         LineChanger lineChanger = new LineChanger();
         List<string> linesMaskList = new List<string>();
         List<string> filesNameMaskList = new List<string>();
-        Forms.ContextMenuStrip contextMenu = new Forms.ContextMenuStrip();
 
         private readonly List<string> regimes = new List<string>()
         {
@@ -40,15 +39,6 @@ namespace Task_2
             { "Загрузить из JSON" },
         };
 
-        private readonly List<string> contextItems = new List<string>()
-        {
-
-            { "Удалить строку" },
-            { "Изменить строку" },
-            {"Восстановить строку"}
-        };
-
-
         public MainWindow()
         {
             InitializeComponent();
@@ -56,7 +46,7 @@ namespace Task_2
             downloadTypeBox.ItemsSource = downloadRegimes;
             uploadTypeBox.ItemsSource = uploadRegimes;
         }
-       
+
         private void Click(object sender, RoutedEventArgs e)
         {
             try
@@ -64,54 +54,58 @@ namespace Task_2
                 resultGrid.ItemsSource = null;
                 matchDatas.Clear();
 
-                if(filesNameMaskList.Count != 0 && regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
+                if (filesNameMaskList.Count != 0 && regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
                 {
                     foreach (string mask in filesNameMaskList)
                     {
-                        if (linesMaskList.Count == 0)
-                        {
-                            matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, lineBox.Text));
-                        }
-                        else 
+                        if (linesMaskList.Count != 0)
                         {
                             foreach (string stringMask in linesMaskList)
                             {
                                 matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, stringMask));
                             }
-                        }                           
+                            matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                        }
+                        else
+                        {
+                            matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, lineBox.Text));
+                        }
                     }
                 }
-                else if(regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
+                else if (filesNameMaskList.Count == 0 && regimeBox.SelectedItem?.ToString() == "Поиск по выбранным файлам")
                 {
                     MessageBox.Show("Выберите файлы для поиска");
                 }
-                else 
-                { 
-                    if (linesMaskList.Count == 0 || regimeBox.SelectedItem?.ToString() == "Поиск по маске файла")
-                    {
-                        matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
-                    }
-                    else
+                else
+                {
+                    if (linesMaskList.Count != 0)
                     {
                         foreach (string stringMask in linesMaskList)
                         {
                             matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMask));
                         }
+                        matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                    }
+                    else
+                    {
+                        matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
                     }
 
                 }
-                
-                if (matchDatas != null)
+
+                if (matchDatas != null && matchDatas.Count > 0)
                 {
                     resultGrid.ItemsSource = matchDatas;
                     downloadButton.IsEnabled = true;
+                    contextMenu.IsEnabled = true;
                 }
                 else
                 {
                     downloadButton.IsEnabled = false;
+                    contextMenu.IsEnabled = false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name);
             }
@@ -153,7 +147,7 @@ namespace Task_2
                     MessageBox.Show("Выберите режим выгрузки");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name);
             }
@@ -172,6 +166,12 @@ namespace Task_2
                             if (resultGrid.ItemsSource != null)
                             {
                                 downloadButton.IsEnabled = true;
+                                contextMenu.IsEnabled = true;
+                            }
+                            else
+                            {
+                                downloadButton.IsEnabled = false;
+                                contextMenu.IsEnabled = false;
                             }
                             break;
                         }
@@ -182,6 +182,12 @@ namespace Task_2
                             if (resultGrid.ItemsSource != null)
                             {
                                 downloadButton.IsEnabled = true;
+                                contextMenu.IsEnabled = true;
+                            }
+                            else
+                            {
+                                downloadButton.IsEnabled = false;
+                                contextMenu.IsEnabled = false;
                             }
                             break;
                         }
@@ -191,7 +197,7 @@ namespace Task_2
             {
                 MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name);
             }
-            
+
         }
 
         private void lineBox_KeyDown(object sender, KeyEventArgs e)
@@ -201,7 +207,7 @@ namespace Task_2
                 linesMaskList.Add(lineBox.Text.ToString());
                 lineMaskBox.ItemsSource = null;
                 lineMaskBox.ItemsSource = linesMaskList;
-            }          
+            }
         }
 
         private void lineMaskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -263,12 +269,42 @@ namespace Task_2
             lineMaskBox.ItemsSource = null;
         }
 
-        private void resultGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void MenuItemDelete(object sender, RoutedEventArgs e)
         {
             try
             {
-                resultGrid.SelectedItem = lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem, "del");
+                resultGrid.SelectedItem = lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem, "Удалить строку");
                 MessageBox.Show("Строка удалена");
+                resultGrid.ItemsSource = null;
+                resultGrid.ItemsSource = matchDatas;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name + "\n");
+            }
+        }
+
+        private void MenuItemChange(object sender, RoutedEventArgs e)
+        { 
+            try
+            {
+                resultGrid.SelectedItem = lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem, "Изменить строку");
+                MessageBox.Show("Строка изменена");
+                resultGrid.ItemsSource = null;
+                resultGrid.ItemsSource = matchDatas;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.TargetSite.Name + "\n");
+            }
+        }
+
+        private void MenuItemBackup(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                resultGrid.SelectedItem = lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem, "Восстановить строку");
+                MessageBox.Show("Строка восстановлена");
                 resultGrid.ItemsSource = null;
                 resultGrid.ItemsSource = matchDatas;
             }
