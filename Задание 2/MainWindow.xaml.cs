@@ -303,10 +303,18 @@ namespace Task_2
         {
             try
             {
-                resultGrid.SelectedItem = lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem, "Восстановить строку");
-                MessageBox.Show("Строка восстановлена");
-                resultGrid.ItemsSource = null;
-                resultGrid.ItemsSource = matchDatas;
+                MatchData lineToBackup = (MatchData)resultGrid.SelectedItem;
+                if (lineToBackup.LineBackup != null)
+                {
+                    resultGrid.SelectedItem = lineChanger.ChangeLine((MatchData)resultGrid.SelectedItem, "Восстановить строку");
+                    MessageBox.Show("Строка восстановлена");
+                    resultGrid.ItemsSource = null;
+                    resultGrid.ItemsSource = matchDatas;
+                }
+                else
+                {
+                    MessageBox.Show("У данной строки нет резевной копии");
+                }
             }
             catch (Exception ex)
             {

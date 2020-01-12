@@ -53,6 +53,7 @@
         <Label Grid.Column="1" Grid.Row="5" Content="Режимы загрузки файла" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="Times New Roman"/>
         <ComboBox x:Name="uploadTypeBox" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Center" Margin="32" VerticalAlignment="Center" Width="130" Height="24" FontFamily="Times New Roman"/>
         <Button x:Name="uplaodButton" Grid.Column="1" Grid.Row= "6" Content="Загрузить" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="130" Height="24" Margin="10,10,10,10" Click="Upload" FontFamily="Times New Roman"/>
-        
+
     </Grid>
 </Window>
+    

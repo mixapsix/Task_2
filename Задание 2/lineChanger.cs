@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
-
+using Microsoft.VisualBasic;
 namespace Task_2
 {
     public class LineChanger
@@ -16,14 +16,6 @@ namespace Task_2
             {
                 int symbols = lineData.countSymbols();
                 int offset;
-                if (lineData.Line != null)
-                {
-                    offset = symbols + lineData.Line.Length + 1;
-                }
-                else
-                {
-                    offset = symbols + lineData.LineBackup.Length + 1;
-                }
                 int i = 0;
                 MatchData matchData = lineData;
                 switch (regime)
@@ -32,6 +24,7 @@ namespace Task_2
                         {
                             using (FileStream fileStream = new FileStream(lineData.FileName, FileMode.Open))
                             {
+                                offset = symbols + lineData.Line.Length + 1; 
                                 byte[] bytes = new byte[fileStream.Length - offset];
                                 fileStream.Seek(offset, SeekOrigin.Begin);
                                 while (fileStream.Position != fileStream.Length)
@@ -40,35 +33,60 @@ namespace Task_2
                                     i++;
                                 }
                                 fileStream.Seek(symbols, SeekOrigin.Begin);
-                                // Запрос ввода.
-                                //fileStream.Write(Encoding.UTF8.GetBytes("Hello\n"), 0, "Hello\n".Length);
-                                fileStream.Write(bytes, 0, offset);
+                                string line = Interaction.InputBox("Введите строку для замены", "Введите строку","");                                
+                                fileStream.Write(Encoding.UTF8.GetBytes($"{line}\n"), 0, $"{line}\n".Length);
+                                fileStream.Write(bytes, 0, bytes.Length);
+
+                                matchData.LineBackup = matchData.Line;
+                                matchData.Line = line;
                                 break;
 
                             }
                         }                 
                     case "Восстановить строку":
-                        {
+                        {                          
                             using (FileStream fileStream = new FileStream(lineData.FileName, FileMode.Open))
                             {
-                                byte[] bytes = new byte[fileStream.Length - offset];
-                                fileStream.Seek(offset, SeekOrigin.Begin);
-                                while (fileStream.Position != fileStream.Length)
+                                if (lineData.Line == null)
                                 {
-                                    bytes[i] = (byte)fileStream.ReadByte();
-                                    i++;
-                                }
-                                fileStream.Seek(symbols, SeekOrigin.Begin);
-                                fileStream.Write(Encoding.UTF8.GetBytes(lineData.LineBackup), 0, lineData.LineBackup.Length);
-                                fileStream.Write(bytes, 0, (int)fileStream.Length - offset);
+                                    byte[] bytes = new byte[fileStream.Length - symbols];
+                                    fileStream.Seek(symbols, SeekOrigin.Begin);
+                                    while (fileStream.Position != fileStream.Length)
+                                    {
+                                        bytes[i] = (byte)fileStream.ReadByte();
+                                        i++;
+                                    }
+                                    fileStream.Seek(symbols, SeekOrigin.Begin);
+                                    fileStream.Write(Encoding.UTF8.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
+                                    fileStream.Write(bytes, 0, bytes.Length);
 
-                                matchData.Line = lineData.LineBackup;
-                                matchData.LineBackup = null;
-                                break;
-                            }
+                                    matchData.Line = lineData.LineBackup;
+                                    matchData.LineBackup = null;
+                                    break;
+                                }
+                                else
+                                {
+                                    offset = symbols + lineData.Line.Length + 1;
+                                    byte[] bytes = new byte[fileStream.Length - offset];
+                                    fileStream.Seek(offset, SeekOrigin.Begin);
+                                    while (fileStream.Position != fileStream.Length)
+                                    {
+                                        bytes[i] = (byte)fileStream.ReadByte();
+                                        i++;
+                                    }
+                                    fileStream.Seek(symbols, SeekOrigin.Begin);
+                                    fileStream.Write(Encoding.UTF8.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
+                                    fileStream.Write(bytes, 0, bytes.Length);
+
+                                    matchData.Line = lineData.LineBackup;
+                                    matchData.LineBackup = null;
+                                    break;
+                                }
+                            } 
                         }
                     case "Удалить строку":
                         {
+                            offset = symbols + lineData.Line.Length + 1;
                             using (FileStream fileStream = new FileStream(lineData.FileName, FileMode.Open))
                             {
                                 byte[] bytes = new byte[fileStream.Length - offset];
@@ -79,7 +97,7 @@ namespace Task_2
                                     i++;
                                 }
                                 fileStream.Seek(symbols, SeekOrigin.Begin);
-                                fileStream.Write(bytes, 0, (int)fileStream.Length - offset);
+                                fileStream.Write(bytes, 0, bytes.Length);
 
                                 matchData.LineBackup = lineData.Line;
                                 matchData.Line = null;
