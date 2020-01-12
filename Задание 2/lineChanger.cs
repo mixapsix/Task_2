@@ -33,8 +33,8 @@ namespace Task_2
                                     i++;
                                 }
                                 fileStream.Seek(symbols, SeekOrigin.Begin);
-                                string line = Interaction.InputBox("Введите строку для замены", "Введите строку","");                                
-                                fileStream.Write(Encoding.UTF8.GetBytes($"{line}\n"), 0, $"{line}\n".Length);
+                                string line = Interaction.InputBox("Введите строку для замены", "Введите строку","") + "\n";                                
+                                fileStream.Write(Encoding.Default.GetBytes(line), 0, line.Length);
                                 fileStream.Write(bytes, 0, bytes.Length);
 
                                 matchData.LineBackup = matchData.Line;
@@ -57,7 +57,7 @@ namespace Task_2
                                         i++;
                                     }
                                     fileStream.Seek(symbols, SeekOrigin.Begin);
-                                    fileStream.Write(Encoding.UTF8.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
+                                    fileStream.Write(Encoding.Default.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
                                     fileStream.Write(bytes, 0, bytes.Length);
 
                                     matchData.Line = lineData.LineBackup;
@@ -75,7 +75,7 @@ namespace Task_2
                                         i++;
                                     }
                                     fileStream.Seek(symbols, SeekOrigin.Begin);
-                                    fileStream.Write(Encoding.UTF8.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
+                                    fileStream.Write(Encoding.Default.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
                                     fileStream.Write(bytes, 0, bytes.Length);
 
                                     matchData.Line = lineData.LineBackup;
