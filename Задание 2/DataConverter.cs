@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Task_2
 {
-    class DataConverter
+    public class DataConverter
     {
 
         public void DownloadInXML(List<MatchData> data)
@@ -28,7 +28,6 @@ namespace Task_2
                 throw;
             }
         }
-
         public List<MatchData> UploadFromXML()
         {
             try

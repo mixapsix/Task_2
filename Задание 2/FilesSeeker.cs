@@ -175,8 +175,6 @@ namespace Task_2
                 string matchString = null;
                 using (StreamReader streamReader = new StreamReader(path))
                 {
-                    TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-
                     while (!streamReader.EndOfStream)
                     {
                         if (mask.IsMatch(matchString = streamReader.ReadLine().ToString()))

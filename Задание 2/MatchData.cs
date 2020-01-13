@@ -16,11 +16,6 @@ namespace Task_2
         public string Line { get; set; }
         public string LineBackup { get; set; }
 
-        public byte[] ConvertToByte()
-        {
-            return Encoding.UTF8.GetBytes(Line);
-        }
-
         public int countSymbols()
         {
             try

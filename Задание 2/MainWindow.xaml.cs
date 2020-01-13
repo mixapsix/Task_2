@@ -12,11 +12,11 @@ namespace Task_2
     {
 
         private string path;
-        List<MatchData> matchDatas = new List<MatchData>();
-        DataConverter dataConverter = new DataConverter();
-        LineChanger lineChanger = new LineChanger();
-        List<string> linesMaskList = new List<string>();
-        List<string> filesNameMaskList = new List<string>();
+        public List<MatchData> matchDatas = new List<MatchData>();
+        public DataConverter dataConverter = new DataConverter();
+        public LineChanger lineChanger = new LineChanger();
+        public List<string> linesMaskList = new List<string>();
+        public List<string> filesNameMaskList = new List<string>();
 
         private readonly List<string> regimes = new List<string>()
         {
@@ -64,7 +64,10 @@ namespace Task_2
                             {
                                 matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, mask, stringMask));
                             }
-                            matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                            if (!linesMaskList.Contains(lineBox.Text))
+                            {
+                                matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                            }
                         }
                         else
                         {
@@ -84,7 +87,10 @@ namespace Task_2
                         {
                             matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, stringMask));
                         }
-                        matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                        if (!linesMaskList.Contains(lineBox.Text))
+                        {
+                            matchDatas.AddRange(FilesSeeker.SearchWithRegime(regimeBox.SelectedItem?.ToString(), path, fileNameBox.Text, lineBox.Text));
+                        }
                     }
                     else
                     {
