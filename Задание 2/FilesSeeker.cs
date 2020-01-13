@@ -162,7 +162,7 @@ namespace Task_2
             Regex fileMask = new Regex($"\\w*{fileNameMask}\\w*");
             if(fileMask.IsMatch(path.Remove(0, path.LastIndexOf('\\'))))
             {
-                matchDatas.Add(new MatchData() { FileName = path });
+                matchDatas.Add(new MatchData(path));
             }
         }
 
@@ -180,7 +180,7 @@ namespace Task_2
                         if (mask.IsMatch(matchString = streamReader.ReadLine().ToString()))
                         {
                             matchString = Regex.Replace(matchString , @"[^\w\.@-\\%]", string.Empty);
-                            matchDatas.Add(new MatchData { FileName = path, LineNumber = line, Line = matchString });
+                            matchDatas.Add(new MatchData(path, line, matchString));
                         }
                         line++;
                     }

@@ -11,10 +11,26 @@ namespace Task_2
     [Serializable]
     public class MatchData
     {
-        public string FileName { get; set; }
-        public int LineNumber { get; set; }
+        public string FileName { get; private set; }
+        public int LineNumber { get; private set; }
         public string Line { get; set; }
         public string LineBackup { get; set; }
+
+        public MatchData()
+        { }
+        
+        public MatchData(string fileName)
+        {
+            FileName = fileName;
+        }
+
+        public MatchData(string fileName, int lineNumber, string line)
+        {
+            FileName = fileName;
+            LineNumber = lineNumber;
+            Line = line;
+        }
+
 
         public int countSymbols()
         {

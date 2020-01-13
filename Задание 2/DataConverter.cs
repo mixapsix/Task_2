@@ -55,7 +55,6 @@ namespace Task_2
             }
         }
 
-
         public void DownloadInJSON(List<MatchData> data)
         {
             try
