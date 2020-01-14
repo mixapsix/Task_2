@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
-using Microsoft.VisualBasic;
 namespace Task_2
 {
     public class LineChanger
@@ -33,14 +32,17 @@ namespace Task_2
                                     i++;
                                 }
                                 fileStream.Seek(symbols, SeekOrigin.Begin);
-                                string line = Interaction.InputBox("Введите строку для замены", "Введите строку","") + "\n";                                
-                                fileStream.Write(Encoding.Default.GetBytes(line), 0, line.Length);
+
+                                StringInputDialog stringInputDialog = new StringInputDialog();
+                                stringInputDialog.ShowDialog();
+                                string line = stringInputDialog.changeLineBox.Text.ToString();
+                                
+                                fileStream.Write(Encoding.Default.GetBytes(line + "\n"), 0, line.Length + 1);
                                 fileStream.Write(bytes, 0, bytes.Length);
 
                                 matchData.LineBackup = matchData.Line;
                                 matchData.Line = line;
                                 break;
-
                             }
                         }                 
                     case "Восстановить строку":
@@ -78,8 +80,9 @@ namespace Task_2
                                     fileStream.Write(Encoding.Default.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
                                     fileStream.Write(bytes, 0, bytes.Length);
 
-                                    matchData.Line = lineData.LineBackup;
-                                    matchData.LineBackup = null;
+                                    string temp = matchData.Line;
+                                    matchData.Line = matchData.LineBackup;
+                                    matchData.LineBackup = temp;
                                     break;
                                 }
                             } 
