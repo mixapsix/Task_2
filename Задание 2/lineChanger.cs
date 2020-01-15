@@ -17,6 +17,11 @@ namespace Task_2
                 int offset;
                 int i = 0;
                 MatchData matchData = lineData;
+                Encoding encoding = null;
+                using (StreamReader streamReader = new StreamReader(matchData.FileName))
+                {
+                    encoding = streamReader.CurrentEncoding;
+                }
                 switch (regime)
                 {
                     case "Изменить строку":
@@ -32,12 +37,10 @@ namespace Task_2
                                     i++;
                                 }
                                 fileStream.Seek(symbols, SeekOrigin.Begin);
-
                                 StringInputDialog stringInputDialog = new StringInputDialog();
                                 stringInputDialog.ShowDialog();
                                 string line = stringInputDialog.changeLineBox.Text.ToString();
-                                
-                                fileStream.Write(Encoding.Default.GetBytes(line + "\n"), 0, line.Length + 1);
+                                fileStream.Write(encoding.GetBytes(line + "\n"), 0, line.Length + 1);
                                 fileStream.Write(bytes, 0, bytes.Length);
 
                                 matchData.LineBackup = matchData.Line;
@@ -59,7 +62,7 @@ namespace Task_2
                                         i++;
                                     }
                                     fileStream.Seek(symbols, SeekOrigin.Begin);
-                                    fileStream.Write(Encoding.Default.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
+                                    fileStream.Write(encoding.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
                                     fileStream.Write(bytes, 0, bytes.Length);
 
                                     matchData.Line = lineData.LineBackup;
@@ -77,7 +80,7 @@ namespace Task_2
                                         i++;
                                     }
                                     fileStream.Seek(symbols, SeekOrigin.Begin);
-                                    fileStream.Write(Encoding.Default.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
+                                    fileStream.Write(encoding.GetBytes(lineData.LineBackup + "\n"), 0, lineData.LineBackup.Length + 1);
                                     fileStream.Write(bytes, 0, bytes.Length);
 
                                     string temp = matchData.Line;
